@@ -26,7 +26,7 @@
 -   🔄 Implementing Forgot Password
 
 
-### To run the React News App on your local machine, follow these steps:
+#### To run the React News App on your local machine, follow these steps:
 
 
 
@@ -37,6 +37,8 @@
 ```
 git clone   https://github.com/Murali3824/E-COMMERCE-FRONTEND-PROJECT.git
 ```
+
+
 
 
 
@@ -70,6 +72,8 @@ npm install
 ```
 npm run dev
 ```
+
+
 
 
 
