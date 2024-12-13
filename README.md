@@ -26,7 +26,7 @@
 -   🔄 Implementing Forgot Password
 
 
-#### To run the React News App on your local machine, follow these steps:
+#### To run the MERN Authentication on your local machine, follow these steps:
 
 
 
@@ -35,7 +35,7 @@
 
 
 ```
-git clone   https://github.com/Murali3824/E-COMMERCE-FRONTEND-PROJECT.git
+git clone   https://github.com/Murali3824/MERN-Authentication.git
 ```
 
 
@@ -51,9 +51,9 @@ MONGODB_URL = your_mongo_uri
 PORT = 4000
 JWT_SECRET = your_secret_key
 NODE_ENV = development
-SMTP_USER =
-SMTP_PASS = 
-SENDER_EMAIL = 
+SMTP_USER = your_smtp_user
+SMTP_PASS = your_smtp_pass
+SENDER_EMAIL = your_smtp_email
 
 CLIENT_URL= http://localhost:5173
 ```
