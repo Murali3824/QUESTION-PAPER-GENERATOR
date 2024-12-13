@@ -1,8 +1,5 @@
 <h1 align="center">MERN Authentication 🔒 </h1>
 
-![Demo App](/frontend/public/screenshot-for-readme.png)
-
-[Video Tutorial on Youtube](https://youtu.be/pmvEgZC55Cg)
 
 About This Course:
 
@@ -33,13 +30,13 @@ About This Course:
 ### Setup .env file
 
 ```bash
-MONGO_URI=your_mongo_uri
-PORT=5000
-JWT_SECRET=your_secret_key
-NODE_ENV=development
-
-MAILTRAP_TOKEN=your_mailtrap_token
-MAILTRAP_ENDPOINT=https://send.api.mailtrap.io/
+MONGODB_URL = your_mongo_uri
+PORT = 4000
+JWT_SECRET = your_secret_key
+NODE_ENV = development
+SMTP_USER =
+SMTP_PASS = 
+SENDER_EMAIL = 
 
 CLIENT_URL= http://localhost:5173
 ```
