@@ -1,4 +1,4 @@
-Advanced Auth Tutorial 🔒
+# MERN Authentication
 
 
 About This Course:
