@@ -1,21 +1,24 @@
 import React, { useContext, useState } from 'react';
-import { Lock, Mail, User, ShieldCheck , Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import axios from 'axios'
+import axios from 'axios';
 import { toast } from 'react-toastify';
+import { ShieldCheck, User, Mail, Lock, Check } from 'lucide-react';
+
 
 const Login = () => {
-
     const [state, setState] = useState('Sign Up');
     const [rememberMe, setRememberMe] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const {backendUrl,setIsLoggedin, getUserData} = useContext(AppContext)
 
-    const [name,setName] = useState('')
-    const [email,setEmail] = useState('')
-    const [password,setPassword] = useState('')
+    const { backendUrl, setIsLoggedin, getUserData } = useContext(AppContext);
+
+
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
 
     const onsubmitHandler = async (e) => {
         e.preventDefault();
@@ -26,38 +29,49 @@ const Login = () => {
             if (state === 'Sign Up') {
                 const { data } = await axios.post(backendUrl + '/api/auth/register', { name, email, password });
                 if (data.success) {
-                    toast.success("Registration successful");
-                    setIsLoggedin(true);
-                    getUserData()
-                    navigate('/');
+                    toast.success("Registration successful. Please verify your email.");
+                    navigate('/email-verify'); // Redirect to email verification page
                 } else {
-                    toast.error(data.message);
+                    // Check if the error message is related to email not being verified
+                    if (data.message.includes("email is not verified")) {
+                        toast.success("user already exists. But, email not verified Please verify your email.");
+                        navigate('/email-verify'); // Redirect to email verification page
+                    } else {
+                        toast.error(data.message);
+                    }
                 }
             } else {
                 const { data } = await axios.post(backendUrl + '/api/auth/login', { email, password });
                 if (data.success) {
-                    toast.success("Login successful");
-                    setIsLoggedin(true);
-                    getUserData()
-                    navigate('/');
+                    if (!data.user.isAccountVerified) {
+                        toast.info("your eamil is not verified Please verify your email address.");
+                        navigate('/email-verify'); // Redirect to email verification page
+                    } else {
+                        toast.success("Login successful");
+                        setIsLoggedin(true);
+                        getUserData();
+                        navigate('/');
+                    }
                 } else {
                     toast.error(data.message);
                 }
             }
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message);
         }
     };
     
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-zinc-900 to-zinc-800 flex items-center justify-center px-4 py-12">
             <div className="w-full max-w-md bg-zinc-800 rounded-2xl shadow-2xl overflow-hidden relative">
                 <div className="absolute top-[-10px] left-1/2 transform -translate-x-1/2 w-36 h-20 bg-zinc-700 rounded-b-full flex items-center justify-center ">
-                    <div className="bg-emerald-500/20 p-2 rounded-full animate-pulse" >
+                    <div className="bg-emerald-500/20 p-2 rounded-full animate-pulse">
                         <ShieldCheck className="text-emerald-400 w-10 h-10" />
                     </div>
                 </div>
+
 
                 <div className="p-8 pt-24">
                     <h2 className="text-3xl font-bold text-white text-center mb-4">
@@ -66,6 +80,7 @@ const Login = () => {
                     <p className="text-zinc-400 text-center mb-8">
                         {state === 'Sign Up' ? 'Join us and start your journey!' : 'Please log in to continue'}
                     </p>
+
 
                     <form onSubmit={onsubmitHandler} className="space-y-4">
                         {state === 'Sign Up' && (
@@ -82,10 +97,11 @@ const Login = () => {
                             </div>
                         )}
 
+
                         <div className="relative">
                             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" />
                             <input
-                                onChange={e=>setEmail(e.target.value)}
+                                onChange={e => setEmail(e.target.value)}
                                 value={email}
                                 type="email"
                                 placeholder="Email Address"
@@ -94,10 +110,11 @@ const Login = () => {
                             />
                         </div>
 
+
                         <div className="relative">
                             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" />
                             <input
-                                onChange={e=>setPassword(e.target.value)}
+                                onChange={e => setPassword(e.target.value)}
                                 value={password}
                                 type="password"
                                 placeholder="Password"
@@ -106,26 +123,28 @@ const Login = () => {
                             />
                         </div>
 
+
                         {state === 'Login' && (
                             <div className="flex items-center justify-between">
-                                <label 
+                                <label
                                     className="flex items-center text-zinc-400 text-sm cursor-pointer"
                                     onClick={() => setRememberMe(!rememberMe)}
                                 >
-                                    <div className={`mr-2 w-5 h-5 border rounded flex items-center justify-center 
+                                    <div className={`mr-2 w-5 h-5 border rounded flex items-center justify-center
                                         ${rememberMe ? 'bg-emerald-500 border-emerald-500' : 'border-zinc-600'}`}>
                                         {rememberMe && <Check className="w-4 h-4 text-white" />}
                                     </div>
                                     Remember me
                                 </label>
-                                <span onClick={()=>navigate('/reset-password')} className="text-sm text-emerald-400 hover:underline cursor-pointer">
+                                <span onClick={() => navigate('/reset-password')} className="text-sm text-emerald-400 hover:underline cursor-pointer">
                                     Forgot password?
                                 </span>
                             </div>
                         )}
 
-                        <button 
-                            type="submit" 
+
+                        <button
+                            type="submit"
                             className="group relative w-full py-3 bg-emerald-500 overflow-hidden font-medium transition duration-300 ease-out border border-transparent rounded-lg hover:shadow-2xl hover:border-white"
                         >
                             <span className="flex items-center font-semibold justify-center w-full h-full text-white ">
@@ -134,12 +153,13 @@ const Login = () => {
                         </button>
                     </form>
 
+
                     <div className="text-center mt-6">
                         {state === 'Sign Up' ? (
                             <p className="text-zinc-400 text-sm">
                                 Already have an account?{' '}
-                                <button 
-                                    onClick={() => setState('Login')} 
+                                <button
+                                    onClick={() => setState('Login')}
                                     className="text-emerald-400 hover:underline"
                                 >
                                     Login
@@ -148,8 +168,8 @@ const Login = () => {
                         ) : (
                             <p className="text-zinc-400 text-sm">
                                 Don't have an account?{' '}
-                                <button 
-                                    onClick={() => setState('Sign Up')} 
+                                <button
+                                    onClick={() => setState('Sign Up')}
                                     className="text-emerald-400 hover:underline"
                                 >
                                     Sign Up
@@ -163,4 +183,10 @@ const Login = () => {
     );
 };
 
+
 export default Login;
+
+
+
+
+
