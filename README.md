@@ -58,13 +58,6 @@ SENDER_EMAIL = your_smtp_email
 FRONTEND_URL= your_frontend_url (http://localhost:5173)
 ```
 
-#### .env file
-
-
-```
-VITE_BACKEND_URL = your_backend_url (http://localhost:4000)
-```
-
 
 #### Install the required dependencies:
 
@@ -86,6 +79,14 @@ npm run dev
 
 
 ### 3. FRONTEND Setup
+
+#### .env file
+
+
+```
+VITE_BACKEND_URL = your_backend_url (http://localhost:4000)
+```
+
 
 #### Install the required dependencies:
 
