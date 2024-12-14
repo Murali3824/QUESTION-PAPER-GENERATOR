@@ -12,10 +12,18 @@ dotenv.config()
 const port = process.env.PORT || 4000
 connectDB()
 
+// Define allowed origins
+const allowedOrigins = ['http://localhost:5173'];
+
 // middlewares
 app.use(express.json())
-app.use(cors({credentials:true}))
 app.use(cookieParser())
+// Configure CORS middleware
+app.use(cors({
+    origin: allowedOrigins, // Allow specific origins
+    credentials: true, // Allow credentials (cookies)
+}));
+
 
 // api routes
 app.use('/api/auth',authRouters)
