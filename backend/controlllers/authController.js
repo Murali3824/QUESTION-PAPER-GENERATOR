@@ -133,28 +133,28 @@ export const login = async (req,res) => {
     }
 }
 
+
 // user logout
-export const logout = async (req,res) => {
+export const logout = async (req, res) => {
     try {
-        
-        res.clearCookie('token',{
-            httpOnly:true,
-            secure: process.env.NODE_ENV === 'production',
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // use secure cookies in production
             samesite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         });
 
         return res.json({
-            success:true,
-            message:'Logged out'
-        })
-
+            success: true,
+            message: 'Logged out successfully',
+        });
     } catch (error) {
         res.json({
-            success:false,
-            message:error.message
-        })
+            success: false,
+            message: error.message,
+        });
     }
-}
+};
+
 
 // send verification OTP to the user's email
 export const sendVerifyOtp = async (req,res) => {
