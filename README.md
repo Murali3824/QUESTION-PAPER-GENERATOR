@@ -55,8 +55,16 @@ SMTP_USER = your_smtp_user
 SMTP_PASS = your_smtp_pass
 SENDER_EMAIL = your_smtp_email
 
-CLIENT_URL= http://localhost:5173
+FRONTEND_URL= your_frontend_url (http://localhost:5173)
 ```
+
+#### .env file
+
+
+```
+VITE_BACKEND_URL = your_backend_url (http://localhost:4000)
+```
+
 
 #### Install the required dependencies:
 
