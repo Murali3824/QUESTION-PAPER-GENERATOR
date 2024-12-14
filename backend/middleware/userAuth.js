@@ -1,44 +1,66 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
+import userModel from '../models/userModel.js';
 
-const userAuth = async (req,res,next) => {
-    
+const userAuth = async (req, res, next) => {
     try {
-
-        const {token}  = req.cookies;
-        if(!token){
+        const { token } = req.cookies;
+        if (!token) {
             return res.json({
-                success:false,
-                message:'not authorized. login again'
+                success: false,
+                message: 'Not authorized. Login again'
             });
         }
 
         try {
+            const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
+            if (tokenDecode) {
+                const user = await userModel.findById(tokenDecode.id);
+                
+                if (!user) {
+                    return res.json({
+                        success: false,
+                        message: "User not found"
+                    });
+                }
 
-            const tokenDecode = jwt.verify(token,process.env.JWT_SECRET)
-            if(tokenDecode){
-                req.body.userId = tokenDecode.id
-            } else{
+                req.user = user; // Attach the entire user object
+                req.body.userId = tokenDecode.id;
+            } else {
                 return res.json({
-                    success:false,
-                    message:"not authorized. login again"
-                })
+                    success: false,
+                    message: "Not authorized. Login again"
+                });
             }
             next();
-
         } catch (error) {
             res.json({
-                success:false,
-                message:error.message,
-            })
+                success: false,
+                message: "Invalid token",
+            });
         }
-        
     } catch (error) {
         res.json({
-            success:false,
-            message:error.message,
-        })
+            success: false,
+            message: error.message,
+        });
     }
+};
 
-}
+export const checkAccountVerification = async (req, res, next) => {
+    try {
+        if (!req.user.isAccountVerified) {
+            return res.json({
+                success: false,
+                message: "Please verify your email first"
+            });
+        }
+        next();
+    } catch (error) {
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
 
 export default userAuth;
