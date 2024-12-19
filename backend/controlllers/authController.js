@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import userModel from '../models/userModel.js';
 import transporter from '../config/nodeMailer.js';
-import {VERIFY_TEMPLATE, EMAIL_VERIFY_TEMPLATE, PASSWORD_RESET_TEMPLATE } from '../config/emailTemplates.js'
+import {VERIFY_TEMPLATE, EMAIL_VERIFY_TEMPLATE, PASSWORD_RESET_TEMPLATE, WELCOME_TEMPLATE } from '../config/emailTemplates.js'
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -83,7 +83,7 @@ export const register = async (req, res) => {
             to: email,
             subject: 'Verify Your Email',
             // text: `Please verify your email by clicking on the following link: ${process.env.FRONTEND_URL}/email-verify`
-            html: VERIFY_TEMPLATE.replace("{{email}}",user.email).replace("{{verificationLink}}",process.env.FRONTEND_URL)
+            html: VERIFY_TEMPLATE.replace("{{email}}",user.email).replace("{{verificationLink}}",`${process.env.FRONTEND_URL}/email-verify`)
         };
         await transporter.sendMail(mailOptions);
 
@@ -120,7 +120,7 @@ export const login = async (req, res) => {
         if (!user) {
             return res.json({
                 success: false,
-                message: "User doesn't exist or the email is incorrect",
+                message: "User doesn't exist",
             });
         }
 
@@ -133,7 +133,26 @@ export const login = async (req, res) => {
             });
         }
 
-        // Generate JWT token
+        // Check if email is verified
+        if (!user.isAccountVerified) {
+            // If email is not verified, send verification email again
+            const mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: user.email,
+                subject: 'Verify Your Email',
+                html: VERIFY_TEMPLATE.replace("{{email}}", user.email)
+                    .replace("{{verificationLink}}", `${process.env.FRONTEND_URL}/email-verify`)
+            };
+
+            await transporter.sendMail(mailOptions);
+
+            return res.json({
+                success: false,
+                message: "Email not verified. A verification email has been sent to your email. Please verify your email."
+            });
+        }
+
+        // Generate JWT token if email is verified
         const token = jwt.sign(
             { id: user._id },
             process.env.JWT_SECRET,
@@ -170,6 +189,7 @@ export const login = async (req, res) => {
         });
     }
 };
+
 
 
 // User logout
@@ -274,6 +294,15 @@ export const verifyEmail = async (req, res) => {
         user.verifyOtpExpireAt = 0;
 
         await user.save();
+        
+        const mailOption = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email,
+            subject: 'Welcome to AUTHFLOW',
+            // text: `welcome`,
+            html: WELCOME_TEMPLATE.replace("{{email}}",user.email).replace("{{dashboardLink}}",`${process.env.FRONTEND_URL}`)
+        };
+        await transporter.sendMail(mailOption);
 
         res.json({
             success: true,
@@ -425,7 +454,6 @@ export const resetPassword = async (req, res) => {
         });
     }
 };
-
 
 
 
