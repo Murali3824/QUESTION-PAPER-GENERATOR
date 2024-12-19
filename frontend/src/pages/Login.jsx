@@ -36,11 +36,11 @@ const Login = () => {
                 setIsLoading(false);  // Reset loading state
                 if (data.message.includes("Registration successful, please verify your email.")) {
                     toast.success("Registration successful, please verify your email.");
-                    navigate('/email-verify');
+                    navigate('/verify');
                 } else {
                     if (data.message.includes("User already exists but email is not verified. Please verify your email.")) {
-                        toast.success("User already exists. Email not verified. Please verify your email.");
-                        navigate('/email-verify');
+                        toast.success("Please verify your email first.");
+                        navigate('/verify');
                     } else {
                         toast.error(data.message);
                     }
@@ -48,23 +48,29 @@ const Login = () => {
             } else {
                 const { data } = await axios.post(backendUrl + '/api/auth/login', { email, password });
                 setIsLoading(false);  // Reset loading state
+                // console.log(data);
                 if (data.success) {
-                    if (!data.user.isAccountVerified) {
-                        toast.info("Your email is not verified. Please verify your email address.");
-                        navigate('/email-verify');
-                    } else {
-                        toast.success("Login successful");
-                        setIsLoggedin(true);
-                        getUserData();
+                    toast.success("Login successful");
+                    setIsLoggedin(true);
+                    getUserData();
+                    setTimeout(() => {
+                        setIsLoading(true)
                         navigate('/');
-                    }
+                    }, 500);
                 } else {
-                    toast.error(data.message);
+                    // Check for the specific message indicating email verification
+                    if (data.message.includes("Email not verified")) {
+                        toast.info("Please verify your email first.");
+                        navigate('/verify');  
+                    } else {
+                        toast.error(data.message || "Something went wrong");
+                    }
                 }
             }
         } catch (error) {
-            setIsLoading(false);  // Reset loading state on error
-            toast.error(error.message);
+            setIsLoading(false); 
+            console.error(error);  
+            toast.error(error.response?.data?.message || "An error occurred during login.");
         }
     };
 

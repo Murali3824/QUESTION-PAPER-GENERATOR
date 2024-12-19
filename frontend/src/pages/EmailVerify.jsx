@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Loader2 } from 'lucide-react'; 
+import { ShieldCheck, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { AppContext } from '../context/AppContext';
@@ -16,7 +16,7 @@ const EmailVerify = () => {
     const handleSendOtp = async () => {
         setLoading(true); // Set loading to true when the request starts
         try {
-            const { data } = await axios.post(`${backendUrl}/api/auth/send-verify-otp`, { userId: 'user-id-here' });
+            const { data } = await axios.post(`${backendUrl}/api/auth/send-verify-otp`, { email: userData.email });
 
             if (data.success) {
                 toast.success("OTP sent to your email.");
@@ -34,23 +34,25 @@ const EmailVerify = () => {
     // Verify the OTP entered by the user
     const handleOtpSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); // Set loading to true when the request starts
+        setLoading(true); 
 
         try {
-            const { data } = await axios.post(`${backendUrl}/api/auth/verify-account`, { otp });
+            const { data } = await axios.post(`${backendUrl}/api/auth/verify-account`, { otp, email: userData.email });
 
             if (data.success) {
                 toast.success("Email verified successfully.");
                 setIsLoggedin(true);
                 getUserData();
-                navigate('/'); // Redirect to home page
+                setTimeout(() => {
+                    navigate('/'); 
+                }, 500);
             } else {
                 toast.error(data.message || "Invalid OTP.");
             }
         } catch (error) {
             toast.error(error.message);
         } finally {
-            setLoading(false); // Set loading to false when the request completes
+            setLoading(false); 
         }
     };
 
@@ -91,15 +93,12 @@ const EmailVerify = () => {
                                 disabled={loading} // Disable the button while loading
                             >
                                 <span className="flex items-center font-semibold justify-center w-full h-full text-white ">
-
                                     {loading ? (
                                         <Loader2 className="animate-spin w-5 h-5 mr-2" />
-
                                     ) : (
-                                            "Send OTP"
+                                        "Send OTP"
                                     )}
                                 </span>
-
                             </button>
                         ) : (
                             <form onSubmit={handleOtpSubmit} className="space-y-4">
@@ -120,15 +119,12 @@ const EmailVerify = () => {
                                     disabled={loading} // Disable the button while loading
                                 >
                                     <span className="flex items-center font-semibold justify-center w-full h-full text-white ">
-
                                         {loading ? (
                                             <Loader2 className="animate-spin w-5 h-5 mr-2" />
-
                                         ) : (
                                             "Verify OTP"
                                         )}
                                     </span>
-                                    
                                 </button>
                             </form>
                         )}
