@@ -374,6 +374,126 @@ export const WELCOME_TEMPLATE = `
 </html>
 `
 
+export const LOGIN_SUCCESS_TEMPLATE = `
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Login Successful</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #E5E5E5;
+    }
+
+    table, td {
+      border-collapse: collapse;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background-color: #ffffff;
+    }
+
+    .main-content {
+      padding: 18px 30px 40px;
+      color: #000000;
+    }
+
+    .button {
+      width: 100%;
+      background: #22D172;
+      text-decoration: none;
+      display: inline-block;
+      padding: 10px 0;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+      font-weight: bold;
+      border-radius: 7px;
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #333333;
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 150%;
+      margin-bottom: 16px;
+      color: #555555;
+    }
+
+    .highlight {
+      color: #4C83EE;
+    }
+
+    .footer {
+      font-size: 12px;
+      color: #888888;
+      margin-top: 24px;
+      text-align: center;
+    }
+
+  </style>
+</head>
+
+<body>
+  <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="#F6FAFB">
+    <tbody>
+      <tr>
+        <td valign="top" align="center">
+          <table class="container" width="600" cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+              <tr>
+                <td class="main-content">
+                  <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <h1>Login Successful!</h1>
+                          <p>Hi there,</p>
+                          <p>We're excited to inform you that your login to <strong>AuthFlow</strong> was successful. If this was you, feel free to continue exploring the platform.</p>
+                          <p>For your security, here are the details of this login:</p>
+                          <a href="{{dashboardLink}}" class="button">Go to Your Dashboard</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p>Need help? Feel free to reach out to our support team at teamSupport@gmail.com</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="footer">
+                    <p>Best regards,</p>
+                    <p>The AuthFlow Team</p>
+                    <p>If you need any assistance, contact us at teamSupport@gmail.com</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>
+`
+
 export const PASSWORD_RESET_TEMPLATE = `
 
 <!DOCTYPE html>

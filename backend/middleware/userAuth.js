@@ -3,11 +3,14 @@ import userModel from '../models/userModel.js';
 
 const userAuth = async (req, res, next) => {
     try {
+
         const { token } = req.cookies;
+        console.log('Cookies received:', req.cookies); 
+        
         if (!token) {
-            return res.json({
+            return res.status(401).json({
                 success: false,
-                message: 'Not authorized. Login again'
+                message: 'Not authorized - No token found'
             });
         }
 

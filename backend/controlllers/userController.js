@@ -1,8 +1,11 @@
 import userModel from "../models/userModel.js";
 
+
 export const getUserData = async (req,res) => {
     try {
-        
+        const { token } = req.cookies;
+        // const token  = req.cookies.token;
+                
         const {userId} = req.body;
 
         const user = await userModel.findById(userId);
@@ -16,6 +19,7 @@ export const getUserData = async (req,res) => {
         res.json({
             success:true,
             userData:{
+                token:token,
                 name: user.name,
                 isAccountVerified: user.isAccountVerified
             }
