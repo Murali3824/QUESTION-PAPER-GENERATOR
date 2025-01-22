@@ -83,7 +83,7 @@ const Login = () => {
     }, [userData, navigate]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-zinc-900 to-zinc-800 flex items-center justify-center p-4">
+        <div className="min-h-screen  flex items-center justify-center p-4">
             <div onClick={() => navigate('/')} className="cursor-pointer absolute left-4 md:left-14 lg:left-24 top-6 flex items-center gap-3">
                 <div className="bg-indigo-500/20 p-2 rounded-full animate-pulse">
                     <ShieldCheck className="text-indigo-400 w-10 h-10" />
@@ -93,7 +93,7 @@ const Login = () => {
                 </span>
             </div>
 
-            <div className="w-full max-w-md mt-10 bg-slate-800 rounded-3xl shadow-2xl overflow-hidden ">
+            <div className="w-full max-w-md mt-10 bg-gradient-to-br from-blue-950 to-emerald-900 rounded-3xl shadow-2xl overflow-hidden ">
                 <div className="p-4 my-4">
                     <h2 className="text-4xl font-bold text-white text-center mb-4 flex items-center justify-center gap-3">
                         {state === 'Sign Up' ? (

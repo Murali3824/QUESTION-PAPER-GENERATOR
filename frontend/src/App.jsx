@@ -10,7 +10,7 @@ import Profile from './components/Profile';
 
 const App = () => {
   return (
-    <div className=' bg-gradient-to-br from-zinc-900 to-zinc-800'>
+    <div className="bg-gradient-to-br from-blue-950 to-emerald-900">
 
       <ToastContainer
         position="top-right"
