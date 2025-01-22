@@ -11,7 +11,7 @@ export const AppContextProvider = (props) => {
     axios.defaults.withCredentials = true  // on reloading user is displayed
 
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || "https://authflow-backend.onrender.com";
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     const [isLoggedin, setIsLoggedin] = useState(false)
     const [userData, setUserData] = useState(false)
