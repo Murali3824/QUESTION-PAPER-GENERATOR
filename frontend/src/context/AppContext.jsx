@@ -11,9 +11,11 @@ export const AppContextProvider = (props) => {
     axios.defaults.withCredentials = true  // on reloading user is displayed
 
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
     const [isLoggedin, setIsLoggedin] = useState(false)
     const [userData, setUserData] = useState(false)
+    const [loading, setLoading] = useState(true); 
 
 
     // getting user data
@@ -22,6 +24,7 @@ export const AppContextProvider = (props) => {
             const { data } = await axios.get(`${backendUrl}/api/user/data`, {
                 withCredentials: true, // Ensure cookies are sent with the request
             });
+            console.log(data);
 
 
             if (data.success) {
@@ -40,10 +43,11 @@ export const AppContextProvider = (props) => {
     // get user authorised or not
     const getAuthState = async () => {
         try {
+            setLoading(true); // Add this
             const { data } = await axios.get(backendUrl + '/api/auth/is-auth');
             if (data.success) {
                 setIsLoggedin(true);
-                getUserData();  // Fetch user data if authenticated
+                await getUserData();
             } else {
                 setIsLoggedin(false);
                 setUserData(false);
@@ -51,12 +55,14 @@ export const AppContextProvider = (props) => {
         } catch (error) {
             setIsLoggedin(false);
             setUserData(false);
-            toast.error("Failed to check authentication status");
+        } finally {
+            setLoading(false); // Add this
         }
-    };    
-    useEffect(()=>{
+    };
+
+    useEffect(() => {
         getAuthState();
-    },[])
+    }, []);
 
 
 

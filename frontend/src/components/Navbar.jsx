@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogIn, ShieldCheck, ChevronDown } from 'lucide-react'; // Import the dropdown icon (ChevronDown)
-import { AppContext } from '../context/AppContext'; // Import context
+import { LogIn, ShieldCheck, User, LogOut, ChevronDown } from 'lucide-react';
+import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -10,17 +10,11 @@ const Navbar = () => {
     const { userData, backendUrl, setUserData, setIsLoggedin, getAuthState } = useContext(AppContext);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    // Toggle dropdown visibility
-    const toggleDropdown = () => {
-        setIsDropdownOpen((prevState) => !prevState);
-    };
-
-    // Logout function
     const logout = async () => {
         try {
             axios.defaults.withCredentials = true;
             const { data } = await axios.post(`${backendUrl}/api/auth/logout`);
-    
+
             if (data.success) {
                 toast.success("Logged out successfully");
                 setIsLoggedin(false);
@@ -40,62 +34,77 @@ const Navbar = () => {
             <div className="mx-auto px-4 md:px-14 lg:px-24">
                 <div className="flex justify-between items-center py-6">
                     {/* Logo */}
-                    <div onClick={() => navigate('/')} className="cursor-pointer flex items-center gap-1 sm:gap-3">
-                                    <div className="bg-indigo-500/20 p-2 rounded-full animate-pulse">
-                                        <ShieldCheck className="text-indigo-400 w-7 h-7 sm:w-10 sm:h-10" />
-                                    </div>
-                                    <span className="text-white text-2xl sm:text-3xl font-semibold tracking-wider">
-                                        AUTHFLOW
-                                    </span>
-                                </div>
-
-                    {/* Conditional rendering for logged-in user */}
-                    {userData ? (
-                        <div className="relative flex items-center  rounded-3xl bg-indigo-400 px-2">
-                            {/* Display the user's first letter */}
-                            <div 
-                                className="cursor-pointer w-12 h-12 text-3xl font-bold flex justify-center items-center bg-indigo-400 text-white rounded-l-3xl" 
-                                onClick={toggleDropdown}
-                            >
-                                {userData.name[0].toUpperCase()}
-                            </div>
-
-                            {/* Dropdown icon */}
-                            <div onClick={toggleDropdown}>
-                                <ChevronDown 
-                                    className={`w-7 h-8 cursor-pointer text-white transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} 
-                                />
-                            </div>
-
-                            {/* Dropdown menu */}
-                            {isDropdownOpen && (
-                                <div className="absolute top-14 right-0 bg-gradient-to-br from-gray-100 to-gray-200 shadow-xl w-44 rounded-lg">
-                                <div className="flex flex-col w-full">
-                                    <p 
-                                        onClick={logout} 
-                                        className="cursor-pointer  py-3 text-red-600 text-center hover:bg-gray-300 rounded-lg text-md font-semibold tracking-wide transition-colors duration-200"
-                                    >
-                                        Logout
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            )}
+                    <div onClick={() => navigate('/')} className="cursor-pointer flex items-center gap-3">
+                        <div className="bg-indigo-500/20 p-2 rounded-full animate-pulse">
+                            <ShieldCheck className="text-indigo-400 w-10 h-10" />
                         </div>
-                    ) : (
-                        <button 
-                            onClick={() => navigate('/login')} 
-                            className="group relative inline-flex items-center justify-center px-6 sm:px-8 py-1.5 sm:py-3 overflow-hidden font-medium transition duration-300 ease-out border  rounded-full hover:shadow-2xl hover:border-transparent"
-                        >
-                            <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-indigo-400 group-hover:translate-x-0 ease">
-                                <LogIn className="w-5 h-5 ml-2" />
-                            </span>
-                            <span className="absolute flex items-center justify-center w-full h-full font-semibold text-xl text-white transition-all duration-300 transform group-hover:translate-x-full ease">
-                                Login
-                            </span>
-                            <span className="relative invisible ">Login</span>
-                        </button>
-                    )}
+                        <span className="text-white text-3xl font-semibold tracking-wider">
+                            AUTHFLOW
+                        </span>
+                    </div>
+
+                    {/* Auth Section */}
+                    <div className="flex items-center">
+                        {userData ? (
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors"
+                                >
+                                    <div className="flex items-center space-x-2">
+                                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
+                                            <span className="text-white font-medium">
+                                                {userData.name[0].toUpperCase()}
+                                            </span>
+                                        </div>
+                                        <span className="hidden sm:block text-slate-200">
+                                            {userData.name}
+                                        </span>
+                                    </div>
+                                    <ChevronDown
+                                        className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''
+                                            }`}
+                                    />
+                                </button>
+
+                                {/* Dropdown Menu */}
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 rounded-lg bg-slate-800 border border-slate-700 shadow-xl">
+                                        <div className="py-1">
+                                            <button
+                                                onClick={() => {
+                                                    navigate('/profile');
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                                className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
+                                            >
+                                                <User className="w-4 h-4" />
+                                                <span>Profile</span>
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    logout();
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                                className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-400 hover:bg-slate-700"
+                                            >
+                                                <LogOut className="w-4 h-4" />
+                                                <span>Logout</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => navigate('/login')}
+                                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white transition-colors"
+                            >
+                                <LogIn className="w-4 h-4" />
+                                <span>Login</span>
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </nav>

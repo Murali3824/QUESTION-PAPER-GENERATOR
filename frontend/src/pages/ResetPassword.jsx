@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ShieldCheck, Mail, Eye, EyeOff, Loader2 } from 'lucide-react';
@@ -13,7 +13,7 @@ const ResetPassword = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false); // Loading state
     const navigate = useNavigate();
-    const { backendUrl } = useContext(AppContext);
+    const { backendUrl, userData } = useContext(AppContext);
 
     const handleSendOtp = async (e) => {
         e.preventDefault();
@@ -61,6 +61,12 @@ const ResetPassword = () => {
         setShowPassword(!showPassword);
     };
 
+    useEffect(() => {
+        if (userData) {
+            navigate("/");
+        }
+    }, [userData, navigate]);
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-zinc-900 to-zinc-800 flex items-center justify-center p-4">
             <div onClick={() => navigate('/')} className="cursor-pointer absolute left-4 md:left-14 lg:left-24 top-6 flex items-center gap-3">
@@ -72,7 +78,7 @@ const ResetPassword = () => {
                 </span>
             </div>
             <div className="w-full max-w-md bg-zinc-800 rounded-2xl shadow-2xl overflow-hidden">
-                <div className="p-8 pt-16">
+                <div className="p-4 py-10">
                     <h2 className="text-3xl font-bold text-white text-center mb-4">Reset Password</h2>
                     <p className="text-zinc-400 text-center mb-8">
                         {otpSent
@@ -131,8 +137,8 @@ const ResetPassword = () => {
                                     onClick={togglePasswordVisibility}
                                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-indigo-400 transition-colors"
                                 >
-                                    {showPassword ? 
-                                        <EyeOff className="w-5 h-5" /> : 
+                                    {showPassword ?
+                                        <EyeOff className="w-5 h-5" /> :
                                         <Eye className="w-5 h-5" />
                                     }
                                 </button>

@@ -3,14 +3,15 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import EmailVerify from './pages/EmailVerify';
-import Verifyinfo from './pages/Verifyinfo';
 import ResetPassword from './pages/ResetPassword';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Profile from './components/Profile';
 
 const App = () => {
   return (
-    <div>
+    <div className=' bg-gradient-to-br from-zinc-900 to-zinc-800'>
+
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -36,11 +37,11 @@ const App = () => {
         }}
       />
       <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/email-verify' element={<EmailVerify/>}/>
-        <Route path='/verify' element={<Verifyinfo/>}/>
-        <Route path='/reset-password' element={<ResetPassword/>}/>
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/email-verify' element={<EmailVerify />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
       </Routes>
     </div>
   );
