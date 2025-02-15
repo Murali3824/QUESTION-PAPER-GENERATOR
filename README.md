@@ -1,32 +1,46 @@
-<h1 align="center">MERN Authentication 🔒 </h1>
+<h1 align="center">Question Paper Generator </h1>
 
+## Overview
+This project is a **Question Paper Generator** that dynamically generates question papers based on **branch, regulation, year, semester, month, and subject**. It selects **short and long answer questions** based on Bloom's Taxonomy (BT) levels and ensures that the questions exist in the database (Excel file). If data is missing, it provides an appropriate message indicating which data is unavailable.
 
 ## Features
 
--   🔧 Backend Setup
--   🗄️ Database Setup
--   🔐 Signup Endpoint
--   📧 Sending Verify Account Email
--   🔍 Verify Email Endpoint
--   📄 Building a Welcome Email Template
--   🚪 Logout Endpoint
--   🔑 Login Endpoint
--   🔄 Forgot Password Endpoint
--   🔁 Reset Password Endpoint
--   ✔️ Check Auth Endpoint
--   🌐 Frontend Setup
--   📋 Signup Page UI
--   🔓 Login Page UI
--   ✅ Email Verification Page UI
--   📤 Implementing Signup
--   📧 Implementing Email Verification
--   🔒 Protecting Our Routes
--   🔑 Implementing Login
--   🏠 Dashboard Page
--   🔄 Implementing Forgot Password
+    ### for Authentication
+
+    -   🔧 Backend Setup
+    -   🗄️ Database Setup
+    -   🔐 Signup Endpoint
+    -   📧 Sending Verify Account Email
+    -   🔍 Verify Email Endpoint
+    -   📄 Building a Welcome Email Template
+    -   🚪 Logout Endpoint
+    -   🔑 Login Endpoint
+    -   🔄 Forgot Password Endpoint
+    -   🔁 Reset Password Endpoint
+    -   ✔️ Check Auth Endpoint
+    -   🌐 Frontend Setup
+    -   📋 Signup Page UI
+    -   🔓 Login Page UI
+    -   ✅ Email Verification Page UI
+    -   📤 Implementing Signup
+    -   📧 Implementing Email Verification
+    -   🔒 Protecting Our Routes
+    -   🔑 Implementing Login
+    -   🏠 Dashboard Page
+    -   🔄 Implementing Forgot Password
 
 
-#### To run the MERN Authentication on your local machine, follow these steps:
+    ### for Question Paper Generator
+
+    -   📝 Generate question papers with a mix of short and long questions
+    -   🔍 Filter questions by branch, regulation, year, semester, month, and unit
+    -   ⚠️ Validate missing data and display errors if required questions are not found
+    -   🗄️ Uses MongoDB for question storage
+    -   📡 Provides an API for generating question papers dynamically
+    -   🖥️ Includes a frontend for user interaction
+
+
+#### To run the Question Paper Generator on your local machine, follow these steps:
 
 
 
@@ -35,10 +49,10 @@
 
 
 ```
-git clone   https://github.com/Murali3824/MERN-Authentication.git
+git clone   https://github.com/Murali3824/QUESTION-PAPER-GENERATOR.git
+
+cd QUESTION-PAPER-GENERATOR
 ```
-
-
 
 
 
