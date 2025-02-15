@@ -1,4 +1,4 @@
-<h1 align="center">Question Paper Generator </h1>
+<h1 align="center">Question Paper Generator 📄  </h1>
 
 ## Overview
 This project is a **Question Paper Generator** that dynamically generates question papers based on **branch, regulation, year, semester, month, and subject**. It selects **short and long answer questions** based on Bloom's Taxonomy (BT) levels and ensures that the questions exist in the database (Excel file). If data is missing, it provides an appropriate message indicating which data is unavailable.
