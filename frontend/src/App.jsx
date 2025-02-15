@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import EmailVerify from './pages/EmailVerify';
 import ResetPassword from './pages/ResetPassword';
+import Upload from './pages/Upload'
+import Generate from './pages/Generate'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Profile from './components/Profile';
@@ -42,6 +44,9 @@ const App = () => {
         <Route path='/email-verify' element={<EmailVerify />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/reset-password' element={<ResetPassword />} />
+        
+        <Route path="/upload" element={<Upload />} />
+        <Route path="/generate" element={<Generate />} />
       </Routes>
     </div>
   );

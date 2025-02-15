@@ -7,7 +7,7 @@ const connectDB = async () => {
         });
 
         // Connect to the database using the connection string from environment variables
-        await mongoose.connect(`${process.env.MONGODB_URL}/auth_db`)
+        await mongoose.connect(`${process.env.MONGODB_URL}/question-paper`)
 
 };
 

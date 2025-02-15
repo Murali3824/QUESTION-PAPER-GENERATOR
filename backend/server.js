@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import connectDB from './config/mongodb.js';
 import authRouters from './routes/authRouters.js';
 import userRouters from './routes/userRouters.js';
+import uploadRoutes from './routes/uploadRoutes.js';
+import generateRoutes from './routes/generateRoutes.js';
+
 
 // App config
 const app = express();
@@ -28,6 +31,8 @@ app.use(cors({
 // API routes
 app.use('/api/auth', authRouters);
 app.use('/api/user', userRouters);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/generate", generateRoutes);
 
 // API endpoints
 app.get('/', (req, res) => {
