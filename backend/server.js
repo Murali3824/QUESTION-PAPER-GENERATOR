@@ -8,7 +8,6 @@ import userRouters from './routes/userRouters.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import generateRoutes from './routes/generateRoutes.js';
 
-
 // App config
 const app = express();
 dotenv.config();
@@ -24,8 +23,8 @@ app.use(cookieParser());
 
 // Configure CORS middleware
 app.use(cors({
-    origin: allowedOrigins, // Allow specific origins
-    credentials: true, // Allow credentials (cookies)
+    origin: allowedOrigins,
+    credentials: true,
 }));
 
 // API routes
@@ -34,11 +33,10 @@ app.use('/api/user', userRouters);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/generate", generateRoutes);
 
-// API endpoints
 app.get('/', (req, res) => {
     res.send("Server is running");
 });
 
 app.listen(port, () => {
-    console.log("Server is running on port: ", port);
+    console.log(`Server is running on port ${port}`);
 });
