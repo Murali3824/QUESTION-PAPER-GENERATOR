@@ -1,121 +1,217 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
-// Create styles
+// Create styles using default fonts
 const styles = StyleSheet.create({
   page: {
-    padding: 30,
-    fontSize: 12,
+    padding: 40,
+    fontFamily: 'Helvetica',
+    fontSize: 11,
+    color: '#374151'
   },
-  header: {
-    marginBottom: 20,
-    textAlign: 'center',
+  headerSection: {
+    marginBottom: 24,
+    textAlign: 'center'
   },
-  title: {
+  instituteName: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
+    fontFamily: 'Helvetica-Bold',
+    marginBottom: 8,
+    letterSpacing: 0.5
   },
-  subtitle: {
-    fontSize: 12,
-    marginBottom: 3,
-    color: '#666',
+  subHeader: {
+    fontSize: 10,
+    color: '#6B7280',
+    marginBottom: 6
+  },
+  metadataRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 16,
+    marginTop: 12,
+    fontSize: 10,
+    color: '#6B7280'
+  },
+  dot: {
+    alignSelf: 'center'
+  },
+  examInfo: {
+    backgroundColor: '#F9FAFB',
+    padding: 16,
+    marginBottom: 24,
+    borderRadius: 4
+  },
+  examInfoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8
+  },
+  examInfoText: {
+    fontSize: 10,
+    color: '#4B5563'
+  },
+  bold: {
+    fontFamily: 'Helvetica-Bold'
   },
   sectionHeader: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginTop: 15,
-    marginBottom: 10,
-  },
-  questionContainer: {
-    marginBottom: 10,
-  },
-  questionRow: {
     flexDirection: 'row',
-    marginBottom: 5,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    marginTop: 24
   },
-  questionNumber: {
-    width: 20,
-    fontWeight: 'bold',
+  sectionTitle: {
+    fontSize: 14,
+    fontFamily: 'Helvetica-Bold',
+    color: '#1F2937'
   },
-  questionContent: {
-    flex: 1,
-  },
-  metadata: {
+  marksBadge: {
+    backgroundColor: '#EFF6FF',
+    padding: '4 8',
+    borderRadius: 12,
     fontSize: 10,
-    color: '#666',
-    marginTop: 3,
+    color: '#2563EB'
   },
-  footer: {
-    marginTop: 20,
+  table: {
+    width: '100%',
+    marginBottom: 16
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#F9FAFB',
+    padding: '8 12',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB'
+  },
+  tableHeaderCell: {
     fontSize: 10,
-    textAlign: 'right',
-    color: '#666',
+    fontFamily: 'Helvetica-Bold',
+    color: '#4B5563'
   },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+    padding: '8 12'
+  },
+  questionNo: {
+    width: '8%'
+  },
+  question: {
+    width: '67%'
+  },
+  unit: {
+    width: '12%',
+    textAlign: 'center'
+  },
+  btLevel: {
+    width: '13%',
+    textAlign: 'center'
+  }
 });
 
-// Helper function to strip HTML tags
-const stripHtml = (html) => {
-  return html.replace(/<[^>]*>?/gm, '');
+const QuestionSection = ({ title, questions, weightage, badgeStyle }) => {
+  if (!questions || questions.length === 0) {
+    return (
+      <></>
+    );
+  }
+
+  return (
+    <View>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>{title}</Text>
+        <Text style={[styles.marksBadge, badgeStyle]}>{weightage}</Text>
+      </View>
+      <View style={styles.table}>
+        <View style={styles.tableHeader}>
+          <Text style={[styles.tableHeaderCell, styles.questionNo]}>Q.No</Text>
+          <Text style={[styles.tableHeaderCell, styles.question]}>Question</Text>
+          <Text style={[styles.tableHeaderCell, styles.unit]}>Unit</Text>
+          <Text style={[styles.tableHeaderCell, styles.btLevel]}>BT Level</Text>
+        </View>
+        {questions.map((q, index) => (
+          <View style={styles.tableRow} key={index}>
+            <Text style={[styles.examInfoText, styles.questionNo]}>{q.number}</Text>
+            <Text style={[styles.examInfoText, styles.question]}>{q.question}</Text>
+            <Text style={[styles.examInfoText, styles.unit]}>{q.unit}</Text>
+            <Text style={[styles.examInfoText, styles.btLevel]}>{q.btLevel}</Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
 };
 
 const PaperPDF = ({ questions }) => {
-  if (!questions) return null;
+  if (!questions || !questions.metadata) return null;
+  const { metadata, shortAnswers = [], longAnswers = [] } = questions;
+
+  // Debug log to check what's being received
+  console.log('PDF Metadata:', metadata);
   
-  const { metadata, shortAnswers, longAnswers } = questions;
+  // Ensure time is displayed, with a fallback
+  const displayTime = metadata.time || '90 Min';
   
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{metadata.subject}</Text>
-          <Text style={styles.subtitle}>
-            {metadata.branch} - {metadata.regulation} - Year {metadata.year}
-          </Text>
-          <Text style={styles.subtitle}>
-            Semester {metadata.semester} - Unit {metadata.unit}
-          </Text>
+        {/* Header Section */}
+        <View style={styles.headerSection}>
+          <Text style={styles.instituteName}>GURU NANAK INSTITUTION OF TECHNOLOGY</Text>
+          <Text style={styles.subHeader}>(An UGC Autonomous Institution – Affiliated to JNTUH)</Text>
+          <View style={styles.metadataRow}>
+            <Text>B.Tech {metadata.year} Year</Text>
+            <Text style={styles.dot}>•</Text>
+            <Text>{metadata.semester} Semester</Text>
+            <Text style={styles.dot}>•</Text>
+            <Text>{metadata.examType}</Text>
+          </View>
         </View>
-        
+
+        {/* Exam Information */}
+        <View style={styles.examInfo}>
+          <View style={styles.examInfoRow}>
+            <Text style={styles.examInfoText}>
+              <Text style={styles.bold}>Time: </Text>
+              {displayTime}
+            </Text>
+            <Text style={styles.examInfoText}>
+              <Text style={styles.bold}>Max Marks: </Text>
+              {metadata.totalMarks}
+            </Text>
+          </View>
+          <View style={styles.examInfoRow}>
+            <Text style={styles.examInfoText}>
+              <Text style={styles.bold}>Subject: </Text>
+              {metadata.subject}
+            </Text>
+            <Text style={styles.examInfoText}>
+              <Text style={styles.bold}>Branch: </Text>
+              {metadata.branch}
+            </Text>
+            <Text style={styles.examInfoText}>
+              <Text style={styles.bold}>Date: </Text>
+              {metadata.date || new Date().toLocaleDateString()}
+            </Text>
+          </View>
+        </View>
+
         {/* Short Answer Questions */}
-        {shortAnswers && shortAnswers.length > 0 && (
-          <View>
-            <Text style={styles.sectionHeader}>Part A - Short Answer Questions</Text>
-            {shortAnswers.map((q) => (
-              <View key={q.number} style={styles.questionContainer}>
-                <View style={styles.questionRow}>
-                  <Text style={styles.questionNumber}>{q.number}.</Text>
-                  <Text style={styles.questionContent}>{stripHtml(q.question)}</Text>
-                </View>
-                <Text style={styles.metadata}>
-                  BT Level: {q.btLevel} | Unit: {q.unit} | Marks: {q.marks || 'N/A'}
-                </Text>
-              </View>
-            ))}
-          </View>
-        )}
-        
+        <QuestionSection
+          title={metadata.shortAnswersHeading || "Part A - Short Answer Questions"}
+          questions={shortAnswers}
+          weightage={metadata.markWeightage?.shortAnswer}
+          badgeStyle={{ backgroundColor: '#EFF6FF', color: '#2563EB' }}
+        />
+
         {/* Long Answer Questions */}
-        {longAnswers && longAnswers.length > 0 && (
-          <View>
-            <Text style={styles.sectionHeader}>Part B - Long Answer Questions</Text>
-            {longAnswers.map((q) => (
-              <View key={q.number} style={styles.questionContainer}>
-                <View style={styles.questionRow}>
-                  <Text style={styles.questionNumber}>{q.number}.</Text>
-                  <Text style={styles.questionContent}>{stripHtml(q.question)}</Text>
-                </View>
-                <Text style={styles.metadata}>
-                  BT Level: {q.btLevel} | Unit: {q.unit} | Marks: {q.marks || 'N/A'}
-                </Text>
-              </View>
-            ))}
-          </View>
-        )}
-        
-        <Text style={styles.footer}>
-          Total Questions: {metadata.totalQuestions}
-        </Text>
+        <QuestionSection
+          title={metadata.longAnswersHeading || "Part B - Long Answer Questions"}
+          questions={longAnswers}
+          weightage={metadata.markWeightage?.longAnswer}
+          badgeStyle={{ backgroundColor: '#F0FDF4', color: '#16A34A' }}
+        />
       </Page>
     </Document>
   );
