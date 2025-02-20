@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Loader2 } from "lucide-react";
 import { AppContext } from "../context/AppContext";
+import axios from 'axios';
 
 const GeneratePaper = ({ setQuestions }) => {
-  const { getSubjects, generatePaper, isLoggedin, userData } = useContext(AppContext);
+  const { backendUrl, generatePaper, isLoggedin, userData } = useContext(AppContext);
 
   const [filters, setFilters] = useState({
     subject: "",
@@ -56,27 +57,57 @@ const GeneratePaper = ({ setQuestions }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [subjects, setSubjects] = useState([]);
+  const [selectedFile, setSelectedFile] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState([]);
 
   useEffect(() => {
     if (isLoggedin && userData) {
       fetchSubjects();
+      fetchUploadedFiles();
     }
   }, [isLoggedin, userData]);
 
   const fetchSubjects = async () => {
     try {
-      const subjectsList = await getSubjects();
-
-      if (Array.isArray(subjectsList)) {
-        setSubjects(subjectsList);
+      if (!selectedFile) {
+        return;
+      }
+      const response = await axios.get(`${backendUrl}/api/generate/subjects/${selectedFile}`, {
+        headers: {
+          Authorization: `Bearer ${userData.token}`
+        }
+      });
+      
+      if (response.data.subjects && Array.isArray(response.data.subjects)) {
+        setSubjects(response.data.subjects);
       } else {
-        throw new Error("Invalid API response: Expected an array");
+        throw new Error("Invalid API response: Expected an array of subjects");
       }
     } catch (err) {
       console.error("Error fetching subjects:", err);
-      setError(`Failed to fetch subjects: ${err.message || "Unknown error"}`);
+      setError(`Failed to fetch subjects: ${err.response?.data?.error || err.message || "Unknown error"}`);
     }
   };
+
+  const fetchUploadedFiles = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/upload/files`, {
+        headers: {
+          Authorization: `Bearer ${userData.token}`
+        }
+      });
+      setUploadedFiles(response.data.files || []);
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      setError(error.response?.data?.error || 'Failed to fetch files');
+    }
+  };
+
+  useEffect(() => {
+    if (selectedFile) {
+      fetchSubjects();
+    }
+  }, [selectedFile]);
 
   const handleFilterChange = (e) => {
     setFilters((prev) => ({
@@ -168,73 +199,92 @@ const GeneratePaper = ({ setQuestions }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!isLoggedin || !userData) {
-      setError("Please log in to generate a paper");
-      return;
+        setError("Please log in to generate a paper");
+        return;
     }
-    
+
     if (!userData.isAccountVerified) {
-      setError("Please verify your account before generating a paper");
-      return;
+        setError("Please verify your account before generating a paper");
+        return;
     }
-    
+
     setLoading(true);
     setError(null);
 
-    try {
-      // Prepare config
-      const config = {
-        short: {
-          useUnitWise: generationMode.short === 'unitWise',
-          useBtLevels: useBtLevels.short,
-          totalCount: totalCounts.short,
-          btLevelCounts: Object.fromEntries(
-            btLevels.short.filter(bt => bt.count > 0).map(bt => [bt.level, bt.count])
-          ),
-          unitCounts: Object.fromEntries(
-            unitCounts.short.filter(u => u.count > 0).map(u => [u.unit, u.count])
-          )
-        },
-        long: {
-          useUnitWise: generationMode.long === 'unitWise',
-          useBtLevels: useBtLevels.long,
-          totalCount: totalCounts.long,
-          btLevelCounts: Object.fromEntries(
-            btLevels.long.filter(bt => bt.count > 0).map(bt => [bt.level, bt.count])
-          ),
-          unitCounts: Object.fromEntries(
-            unitCounts.long.filter(u => u.count > 0).map(u => [u.unit, u.count])
-          )
-        }
-      };
-
-      // Validate configurations first
-      validateConfig(config, "short");
-      validateConfig(config, "long");
-
-      // Add userId to the request
-      const requestData = {
-        ...filters,
-        userId: userData._id,
-        config
-      };
-
-      // Generate paper only if validation passes
-      const response = await generatePaper(requestData);
-
-      if (!response) {
-        throw new Error("No response received from server");
-      }
-
-      setQuestions(response);
-    } catch (err) {
-      console.error("Error in handleSubmit:", err);
-      setError(err.message || "An error occurred while generating the paper");
-    } finally {
-      setLoading(false);
+    if (!selectedFile) {
+        setError('Please select a question bank file');
+        setLoading(false);
+        return;
     }
-  };
+
+    try {
+        // Validate configurations before making API call
+        const config = {
+            short: {
+                useUnitWise: generationMode.short === 'unitWise',
+                useBtLevels: useBtLevels.short,
+                totalCount: totalCounts.short,
+                btLevelCounts: Object.fromEntries(
+                    btLevels.short.filter(bt => bt.count > 0).map(bt => [bt.level, bt.count])
+                ),
+                unitCounts: Object.fromEntries(
+                    unitCounts.short.filter(u => u.count > 0).map(u => [u.unit, u.count])
+                )
+            },
+            long: {
+                useUnitWise: generationMode.long === 'unitWise',
+                useBtLevels: useBtLevels.long,
+                totalCount: totalCounts.long,
+                btLevelCounts: Object.fromEntries(
+                    btLevels.long.filter(bt => bt.count > 0).map(bt => [bt.level, bt.count])
+                ),
+                unitCounts: Object.fromEntries(
+                    unitCounts.long.filter(u => u.count > 0).map(u => [u.unit, u.count])
+                )
+            }
+        };
+
+        // // Pre-submission validation
+        // if (config.short.totalCount === 0 && config.long.totalCount === 0) {
+        //     throw new Error("Please specify at least one question count (short or long)");
+        // }
+
+        // Validate configurations
+        validateConfig(config, "short");
+        validateConfig(config, "long");
+
+        const requestData = {
+            ...filters,
+            fileId: selectedFile,
+            config
+        };
+
+        console.log('Request data:', JSON.stringify(requestData, null, 2));
+        
+        const response = await generatePaper(requestData);
+
+        if (!response) {
+            throw new Error("No response received from server");
+        }
+
+        if (!response.shortAnswers && !response.longAnswers) {
+            throw new Error("No questions were generated");
+        }
+
+        setQuestions(response);
+    } catch (err) {
+        console.error("Error generating paper:", err);
+        const errorMessage = err.response?.data?.error || err.message || "Failed to generate paper";
+        const errorDetails = err.response?.data?.details;
+        
+        setError(`${errorMessage}${errorDetails ? `\n\nDetails: ${errorDetails}` : ''}`);
+    } finally {
+        setLoading(false);
+    }
+};
+
 
   const renderQuestionConfig = (type) => (
     <div className="space-y-4">
@@ -343,141 +393,160 @@ const GeneratePaper = ({ setQuestions }) => {
     );
   }
 
-  // If account not verified
-  // if (!userData.isAccountVerified) {
-  //   return (
-  //     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
-  //       <div className="flex flex-col items-center justify-center py-8">
-  //         <div className="text-xl font-semibold text-yellow-600 mb-4">
-  //           Account Verification Required
-  //         </div>
-  //         <p className="text-center text-gray-700">
-  //           Please verify your account before generating a paper. Check your email for the verification link.
-  //         </p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Filter Selections */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Select Question Bank</label>
           <select
-            name="branch"
-            value={filters.branch}
-            onChange={handleFilterChange}
+            value={selectedFile}
+            onChange={(e) => setSelectedFile(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md"
             required
           >
-            <option value="">Select Branch</option>
-            {getUniqueValues("branch").map((branch) => (
-              <option key={branch} value={branch}>
-                {branch}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="regulation"
-            value={filters.regulation}
-            onChange={handleFilterChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            required
-          >
-            <option value="">Select Regulation</option>
-            {getUniqueValues("regulation").map((reg) => (
-              <option key={reg} value={reg}>
-                {reg}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="year"
-            value={filters.year}
-            onChange={handleFilterChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            required
-          >
-            <option value="">Select Year</option>
-            {getUniqueValues("year").map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="semester"
-            value={filters.semester}
-            onChange={handleFilterChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            required
-          >
-            <option value="">Select Semester</option>
-            {getUniqueValues("semester").map((sem) => (
-              <option key={sem} value={sem}>
-                {sem}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="subject"
-            value={filters.subject}
-            onChange={handleFilterChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            required
-          >
-            <option value="">Select Subject</option>
-            {subjects
-              .filter(
-                (s) =>
-                  (!filters.branch || s.branch === filters.branch) &&
-                  (!filters.regulation ||
-                    s.regulation === filters.regulation) &&
-                  (!filters.year ||
-                    (Array.isArray(s.year)
-                      ? s.year.includes(filters.year)
-                      : s.year === filters.year)) &&
-                  (!filters.semester ||
-                    (Array.isArray(s.semester)
-                      ? s.semester.includes(Number(filters.semester))
-                      : s.semester === Number(filters.semester)))
-              )
-              .map((s) => (
-                <option key={s.subjectCode} value={s.subjectCode}>
-                  {s.subject} ({s.subjectCode})
-                </option>
-              ))}
-          </select>
-
-          <select
-            name="unit"
-            value={filters.unit}
-            onChange={handleFilterChange}
-            className="w-full p-2 border border-gray-300 rounded-md"
-          >
-            <option value="">All Units</option>
-            {[1, 2, 3, 4, 5].map((unit) => (
-              <option key={unit} value={unit}>
-                Unit {unit}
+            <option value="">Select Question Bank</option>
+            {uploadedFiles.map((file) => (
+              <option key={file._id} value={file._id}>
+                {file.filename} ({new Date(file.uploadDate).toLocaleDateString()})
               </option>
             ))}
           </select>
         </div>
 
-        {/* Question Configuration */}
-        <div className="space-y-6">
+        {/* Filter Selections */}
+        <div className="grid grid-cols-2 gap-4">
           <div>
-            <h3 className="font-semibold mb-2">Short Answer Questions</h3>
-            {renderQuestionConfig("short")}
+            <label className="block text-sm font-medium mb-1">Branch</label>
+            <select
+              name="branch"
+              value={filters.branch}
+              onChange={handleFilterChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            >
+              <option value="">Select Branch</option>
+              {getUniqueValues("branch").map((branch) => (
+                <option key={branch} value={branch}>
+                  {branch}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-2">Long Answer Questions</h3>
+            <label className="block text-sm font-medium mb-1">Regulation</label>
+            <select
+              name="regulation"
+              value={filters.regulation}
+              onChange={handleFilterChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            >
+              <option value="">Select Regulation</option>
+              {getUniqueValues("regulation").map((reg) => (
+                <option key={reg} value={reg}>
+                  {reg}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Year</label>
+            <select
+              name="year"
+              value={filters.year}
+              onChange={handleFilterChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            >
+              <option value="">Select Year</option>
+              {getUniqueValues("year").map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Semester</label>
+            <select
+              name="semester"
+              value={filters.semester}
+              onChange={handleFilterChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            >
+              <option value="">Select Semester</option>
+              {getUniqueValues("semester").map((sem) => (
+                <option key={sem} value={sem}>
+                  {sem}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Subject</label>
+            <select
+              name="subject"
+              value={filters.subject}
+              onChange={handleFilterChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            >
+              <option value="">Select Subject</option>
+              {subjects
+                .filter(
+                  (s) =>
+                    (!filters.branch || s.branch === filters.branch) &&
+                    (!filters.regulation ||
+                      s.regulation === filters.regulation) &&
+                    (!filters.year ||
+                      (Array.isArray(s.year)
+                        ? s.year.includes(filters.year)
+                        : s.year === filters.year)) &&
+                    (!filters.semester ||
+                      (Array.isArray(s.semester)
+                        ? s.semester.includes(Number(filters.semester))
+                        : s.semester === Number(filters.semester)))
+                )
+                .map((s) => (
+                  <option key={s.subjectCode} value={s.subjectCode}>
+                    {s.subject} ({s.subjectCode})
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Unit</label>
+            <select
+              name="unit"
+              value={filters.unit}
+              onChange={handleFilterChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+            >
+              <option value="">All Units</option>
+              {[1, 2, 3, 4, 5].map((unit) => (
+                <option key={unit} value={unit}>
+                  Unit {unit}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Question Configuration */}
+        <div className="space-y-6">
+          <div className="p-4 border border-gray-200 rounded-md">
+            <h3 className="font-semibold mb-3">Short Answer Questions</h3>
+            {renderQuestionConfig("short")}
+          </div>
+
+          <div className="p-4 border border-gray-200 rounded-md">
+            <h3 className="font-semibold mb-3">Long Answer Questions</h3>
             {renderQuestionConfig("long")}
           </div>
         </div>

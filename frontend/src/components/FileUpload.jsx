@@ -62,7 +62,7 @@ const FileUpload = () => {
       const response = await uploadFile(file);
       
       if (response.success) {
-        const processedCount = response.count || 0;
+        const processedCount = response.questionsCount || 0;
         setMessage(`✅ File uploaded successfully! ${processedCount} questions processed.`);
         toast.success("File uploaded successfully!");
         

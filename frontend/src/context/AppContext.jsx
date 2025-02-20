@@ -7,7 +7,7 @@ export const AppContext = createContext()
 
 
 export const AppContextProvider = (props) => {
-    
+
     axios.defaults.withCredentials = true  // on reloading user is displayed
 
 
@@ -18,14 +18,14 @@ export const AppContextProvider = (props) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [subjects, setSubjects] = useState([]);
-    const [generatedPaper, setGeneratedPaper] = useState(null); 
+    const [generatedPaper, setGeneratedPaper] = useState(null);
 
     const handleError = (error) => {
         setError(error.response?.data?.error || error.message || 'An error occurred');
         setLoading(false);
     };
 
-    
+
     // getting user data
     const getUserData = async () => {
         try {
@@ -76,34 +76,36 @@ export const AppContextProvider = (props) => {
         try {
             setLoading(true);
             setError(null);
-    
+
             const formData = new FormData();
             formData.append('file', file);
-    
+
             const response = await axios.post(`${backendUrl}/api/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-    
-            // console.log("Upload response:", response);
+
+            // Log the full response for debugging
+            console.log("Full upload response:", response);
+
             setLoading(false);
-            return response.data || {}; 
+            return response.data || {};
         } catch (error) {
+            console.error("Upload error details:", error.response?.data);
             handleError(error);
             throw error;
         }
     };
-
 
     const generatePaper = async (config) => {
         try {
             setLoading(true);
             setError(null);
     
-            const response = await axios.post(`${backendUrl}/api/generate`, config);
-            // console.log("Generate Paper Response Data:", response.data); 
-    
+            const response = await axios.post(`${backendUrl}/api/generate/generate-paper`, config, { withCredentials: true });
+            console.log("Generate Paper Response Data:", response.data); 
+
             setGeneratedPaper(response.data);
             setLoading(false);
             return response.data;
@@ -113,25 +115,15 @@ export const AppContextProvider = (props) => {
             throw error;
         }
     };
-    
-    const getSubjects = async () => {
+
+    const savePaper = async (title, paperData) => {
         try {
-            setLoading(true);
-            setError(null);
-    
-            const response = await axios.get(`${backendUrl}/api/generate/subjects`);
-    
-            // console.log("Full API Response:", response.data);
-    
-            if (!response.data || !Array.isArray(response.data.subjects)) {
-                throw new Error("Invalid API response format");
-            }
-    
-            setSubjects(response.data.subjects);
-            setLoading(false);
-            return response.data.subjects;
+            const response = await axios.post(`${backendUrl}/api/upload/paper/save`, {
+                title,
+                paperData
+            });
+            return response.data;
         } catch (error) {
-            handleError(error);
             throw error;
         }
     };
@@ -143,8 +135,8 @@ export const AppContextProvider = (props) => {
 
     const value = {
         backendUrl,
-        isLoggedin,setIsLoggedin,
-        userData,setUserData,
+        isLoggedin, setIsLoggedin,
+        userData, setUserData,
         getUserData,
         getAuthState,
         // State
@@ -156,7 +148,7 @@ export const AppContextProvider = (props) => {
         // API Actions
         uploadFile,
         generatePaper,
-        getSubjects,
+        savePaper,
 
         // Utility Actions
         clearError,
@@ -164,10 +156,9 @@ export const AppContextProvider = (props) => {
     }
 
 
-    return(
+    return (
         <AppContext.Provider value={value}>
             {props.children}
         </AppContext.Provider>
     )
 }
-
