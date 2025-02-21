@@ -119,7 +119,7 @@ const ResetPassword = () => {
                                     onChange={(e) => setOtp(e.target.value)}
                                     type="text"
                                     placeholder="Enter OTP"
-                                    className="w-full pl-4 pr-4 py-3 bg-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                                    className="w-full pl-4 pr-4 py-3  rounded-lg text-black placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                     required
                                 />
                             </div>
@@ -129,7 +129,7 @@ const ResetPassword = () => {
                                     onChange={(e) => setNewPassword(e.target.value)}
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Enter New Password"
-                                    className="w-full pl-4 pr-10 py-3 bg-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                                    className="w-full pl-4 pr-10 py-3  rounded-lg text-black placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                     required
                                 />
                                 <button
