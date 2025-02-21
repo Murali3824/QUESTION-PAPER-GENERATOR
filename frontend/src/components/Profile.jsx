@@ -155,7 +155,7 @@ const Profile = () => {
                                 </div>
                                 <div>
                                     <p className="text-sm text-slate-400 font-medium">Email Address</p>
-                                    <p className="text-white font-medium mt-0.5">{user.email}</p>
+                                    <p className="text-black font-medium mt-0.5">{user.email}</p>
                                 </div>
                             </div>
 
@@ -168,7 +168,7 @@ const Profile = () => {
                                     <p className="text-sm text-slate-400 font-medium">Account Status</p>
                                     <div className="flex items-center gap-2 mt-0.5">
                                         <span className={`w-2 h-2 rounded-full ${user.isAccountVerified ? 'bg-green-400' : 'bg-yellow-400'}`} />
-                                        <p className="text-white font-medium">
+                                        <p className="text-black font-medium">
                                             {user.isAccountVerified ? 'Verified Account' : 'Pending Verification'}
                                         </p>
                                     </div>
@@ -182,7 +182,7 @@ const Profile = () => {
                                 </div>
                                 <div>
                                     <p className="text-sm text-slate-400 font-medium">Account ID</p>
-                                    <p className="text-white font-medium font-mono mt-0.5 break-all">{user._id}</p>
+                                    <p className="text-black font-medium font-mono mt-0.5 break-all">{user._id}</p>
                                 </div>
                             </div>
                             {/* Password Update Section - full width */}

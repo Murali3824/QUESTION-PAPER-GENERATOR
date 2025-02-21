@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import { toast } from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { Save, Download, Edit2 } from 'lucide-react';
 import { AppContext } from '../context/AppContext';
 import PaperPDF from './PaperPDF';

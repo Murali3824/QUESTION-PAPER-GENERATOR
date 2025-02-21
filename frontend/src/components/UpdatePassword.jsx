@@ -71,7 +71,7 @@ const UpdatePassword = ({ backendUrl, onSuccess }) => {
                 </div>
                 <div className="flex-1">
                     <p className="text-sm text-slate-400 font-medium">Password</p>
-                    <p className="text-white font-medium mt-0.5">••••••••</p>
+                    <p className="text-black font-medium mt-0.5">••••••••</p>
                 </div>
                 <button
                     onClick={() => setIsEditing(true)}
@@ -87,7 +87,7 @@ const UpdatePassword = ({ backendUrl, onSuccess }) => {
         <div className="p-4 bg-white/5 rounded-xl">
             <div className="flex items-center gap-2 mb-4">
                 <Lock className="w-5 h-5 text-indigo-400" />
-                <h3 className="text-lg font-medium text-white">Update Password</h3>
+                <h3 className="text-lg font-medium text-indigo-600">Update Password</h3>
             </div>
 
             {error && (
@@ -104,13 +104,13 @@ const UpdatePassword = ({ backendUrl, onSuccess }) => {
                         value={passwords.oldPassword}
                         onChange={(e) => setPasswords(prev => ({ ...prev, oldPassword: e.target.value }))}
                         placeholder="Current Password"
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white 
-                                 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        className="w-full bg-white/5 border border-black/30 rounded-lg px-4 py-2.5 text-black 
+                                 placeholder-black focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     />
                     <button
                         type="button"
                         onClick={() => handleTogglePassword('old')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/75"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-500 hover:text-indigo-600"
                     >
                         {showPasswords.old ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -123,13 +123,13 @@ const UpdatePassword = ({ backendUrl, onSuccess }) => {
                         value={passwords.newPassword}
                         onChange={(e) => setPasswords(prev => ({ ...prev, newPassword: e.target.value }))}
                         placeholder="New Password"
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white 
-                                 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        className="w-full bg-white/5 border border-black/30 rounded-lg px-4 py-2.5 text-black 
+                                 placeholder-black focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     />
                     <button
                         type="button"
                         onClick={() => handleTogglePassword('new')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/75"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-500 hover:text-indigo-600"
                     >
                         {showPasswords.new ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -142,13 +142,13 @@ const UpdatePassword = ({ backendUrl, onSuccess }) => {
                         value={passwords.confirmPassword}
                         onChange={(e) => setPasswords(prev => ({ ...prev, confirmPassword: e.target.value }))}
                         placeholder="Confirm New Password"
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white 
-                                 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                        className="w-full bg-white/5 border border-black/30 rounded-lg px-4 py-2.5 text-black 
+                                 placeholder-black focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     />
                     <button
                         type="button"
                         onClick={() => handleTogglePassword('confirm')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/75"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-500 hover:text-indigo-600"
                     >
                         {showPasswords.confirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>

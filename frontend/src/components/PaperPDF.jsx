@@ -148,7 +148,7 @@ const PaperPDF = ({ questions }) => {
   const { metadata, shortAnswers = [], longAnswers = [] } = questions;
 
   // Debug log to check what's being received
-  console.log('PDF Metadata:', metadata);
+  // console.log('PDF Metadata:', metadata);
   
   // Ensure time is displayed, with a fallback
   const displayTime = metadata.time || '90 Min';

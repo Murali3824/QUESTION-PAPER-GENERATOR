@@ -1,32 +1,51 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-// import Header from '../components/Header';
 import { Link } from "react-router-dom";
-
 
 const Home = () => {
     return (
-        <div className='flex flex-col items-center justify-center min-h-screen '>
+        <div className="min-h-screen ">
             <Navbar />
-            {/* <Header/> */}
-            <div className="p-6 flex flex-col items-center justify-center bg-gray-100">
-                <h1 className="text-3xl font-bold mb-6">📄 Question Paper Generator</h1>
-                <p className="mb-4 text-lg">Upload a question bank and generate a structured exam paper easily.</p>
 
-                <div className="flex gap-4">
-                    <Link to="/upload">
-                        <button className="px-6 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
-                            📤 Upload Questions
-                        </button>
-                    </Link>
+            <main className="container mx-auto pt-40">
+                <div className="max-w-3xl mx-auto text-center">
+                    <h1 className="text-5xl font-bold text-gray-800 mb-6">
+                        Question Paper Generator
+                    </h1>
 
-                    <Link to="/generate">
-                        <button className="px-6 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600">
-                            📝 Generate Paper
-                        </button>
-                    </Link>
+                    <p className="text-xl text-gray-600 mb-12 leading-relaxed">
+                        Create professional exam papers in minutes. Upload your question bank
+                        and let our system generate a well-structured paper for you.
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+                        <Link to="/upload" className="group">
+                            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                                <div className="mb-4 text-4xl">📤</div>
+                                <h2 className="text-2xl font-semibold text-gray-800 mb-3">
+                                    Upload Questions
+                                </h2>
+                                <p className="text-gray-600">
+                                    Import your question bank in supported formats
+                                </p>
+                            </div>
+                        </Link>
+
+                        <Link to="/generate" className="group">
+                            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                                <div className="mb-4 text-4xl">📝</div>
+                                <h2 className="text-2xl font-semibold text-gray-800 mb-3">
+                                    Generate Paper
+                                </h2>
+                                <p className="text-gray-600">
+                                    Create a structured exam paper instantly
+                                </p>
+                            </div>
+                        </Link>
+                    </div>
+
                 </div>
-            </div>
+            </main>
         </div>
     );
 };

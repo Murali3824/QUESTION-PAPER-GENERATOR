@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { ShieldCheck, User, Mail, Lock, Check, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Zap, User, Mail, Lock, Check, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
     const [state, setState] = useState('Login');
@@ -27,7 +27,7 @@ const Login = () => {
         e.preventDefault();
 
         setIsLoading(true);  // Set loading state to true
-        
+
         try {
             axios.defaults.withCredentials = true;
 
@@ -35,7 +35,7 @@ const Login = () => {
                 const { data } = await axios.post(backendUrl + '/api/auth/register', { name, email, password });
                 setIsLoading(false);
                 console.log(data.message);
-                  // Reset loading state
+                // Reset loading state
                 if (data.message.includes("Registration successful, please verify your email.")) {
                     toast.success("Registration successful, please verify your email.");
                     navigate('/email-verify');
@@ -63,15 +63,15 @@ const Login = () => {
                     // Check for the specific message indicating email verification
                     if (data.message.includes("Email verification required")) {
                         toast.info("Please verify your email first.");
-                        navigate('/email-verify');  
+                        navigate('/email-verify');
                     } else {
                         toast.error(data.message || "Something went wrong");
                     }
                 }
             }
         } catch (error) {
-            setIsLoading(false); 
-            console.error(error);  
+            setIsLoading(false);
+            console.error(error);
             toast.error(error.response?.data?.message || "An error occurred during login.");
         }
     };
@@ -86,16 +86,16 @@ const Login = () => {
         <div className="min-h-screen  flex items-center justify-center p-4">
             <div onClick={() => navigate('/')} className="cursor-pointer absolute left-4 md:left-14 lg:left-24 top-6 flex items-center gap-3">
                 <div className="bg-indigo-500/20 p-2 rounded-full animate-pulse">
-                    <ShieldCheck className="text-indigo-400 w-10 h-10" />
+                    <Zap className="text-indigo-500 w-10 h-10" />
                 </div>
-                <span className="text-white text-3xl font-semibold tracking-wider">
-                    AUTHFLOW
+                <span className="text-indigo-500 text-3xl font-semibold tracking-wider">
+                    XamGen
                 </span>
             </div>
 
-            <div className="w-full max-w-md mt-10 bg-gradient-to-br from-blue-950 to-emerald-900 rounded-3xl shadow-2xl overflow-hidden ">
+            <div className="w-full max-w-md mt-10  rounded-3xl shadow-2xl overflow-hidden ">
                 <div className="p-4 my-4">
-                    <h2 className="text-4xl font-bold text-white text-center mb-4 flex items-center justify-center gap-3">
+                    <h2 className="text-4xl font-bold text-indigo-500 text-center mb-4 flex items-center justify-center gap-3">
                         {state === 'Sign Up' ? (
                             <>
                                 <UserPlus className="w-10 h-10 text-indigo-400" />
@@ -109,8 +109,8 @@ const Login = () => {
                         )}
                     </h2>
                     <p className="text-slate-400 text-center mb-8">
-                        {state === 'Sign Up' 
-                            ? 'Join our platform and start your journey!' 
+                        {state === 'Sign Up'
+                            ? 'Join our platform and start your journey!'
                             : 'Sign in to continue your session'}
                     </p>
 
@@ -123,7 +123,7 @@ const Login = () => {
                                     value={name}
                                     type="text"
                                     placeholder="Full Name"
-                                    className="w-full pl-10 pr-4 py-3 bg-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                                    className="w-full pl-10 pr-4 py-3 rounded-xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
                                     required
                                 />
                             </div>
@@ -136,7 +136,7 @@ const Login = () => {
                                 value={email}
                                 type="email"
                                 placeholder="Email Address"
-                                className="w-full pl-10 pr-4 py-3 bg-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                                className="w-full pl-10 pr-4 py-3 rounded-xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
                                 required
                             />
                         </div>
@@ -148,7 +148,7 @@ const Login = () => {
                                 value={password}
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Password"
-                                className="w-full pl-10 pr-4 py-3 bg-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                                className="w-full pl-10 pr-4 py-3 rounded-xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
                                 required
                             />
                             <button
@@ -156,8 +156,8 @@ const Login = () => {
                                 onClick={togglePasswordVisibility}
                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-indigo-400 transition-colors"
                             >
-                                {showPassword ? 
-                                    <EyeOff className="w-5 h-5" /> : 
+                                {showPassword ?
+                                    <EyeOff className="w-5 h-5" /> :
                                     <Eye className="w-5 h-5" />
                                 }
                             </button>
@@ -175,8 +175,8 @@ const Login = () => {
                                     </div>
                                     Remember me
                                 </label>
-                                <span 
-                                    onClick={() => navigate('/reset-password')} 
+                                <span
+                                    onClick={() => navigate('/reset-password')}
                                     className="text-sm text-indigo-400 hover:underline cursor-pointer transition-colors"
                                 >
                                     Forgot password?

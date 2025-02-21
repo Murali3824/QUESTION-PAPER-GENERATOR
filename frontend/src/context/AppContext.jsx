@@ -1,20 +1,17 @@
-import { createContext, useEffect, useState } from "react";
+// AppContextProvider.jsx
+import React, { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-
-export const AppContext = createContext()
-
+export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
-
-    axios.defaults.withCredentials = true  // on reloading user is displayed
-
+    axios.defaults.withCredentials = true;  // on reloading user is displayed
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-    const [isLoggedin, setIsLoggedin] = useState(false)
-    const [userData, setUserData] = useState(false)
+    const [isLoggedin, setIsLoggedin] = useState(false);
+    const [userData, setUserData] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [subjects, setSubjects] = useState([]);
@@ -25,7 +22,6 @@ export const AppContextProvider = (props) => {
         setLoading(false);
     };
 
-
     // getting user data
     const getUserData = async () => {
         try {
@@ -33,7 +29,6 @@ export const AppContextProvider = (props) => {
                 withCredentials: true, // Ensure cookies are sent with the request
             });
             console.log(data);
-
 
             if (data.success) {
                 // Successfully fetched user data
@@ -43,10 +38,9 @@ export const AppContextProvider = (props) => {
                 toast.error(data.message || "Failed to fetch user data");
             }
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message);
         }
     };
-
 
     // get user authorised or not
     const getAuthState = async () => {
@@ -102,16 +96,16 @@ export const AppContextProvider = (props) => {
         try {
             setLoading(true);
             setError(null);
-    
+
             const response = await axios.post(`${backendUrl}/api/generate/generate-paper`, config, { withCredentials: true });
-            console.log("Generate Paper Response Data:", response.data); 
+            console.log("Generate Paper Response Data:", response.data);
 
             setGeneratedPaper(response.data);
             setLoading(false);
             return response.data;
         } catch (error) {
             handleError(error);
-            console.error("Error generating paper:", error); 
+            console.error("Error generating paper:", error);
             throw error;
         }
     };
@@ -128,10 +122,33 @@ export const AppContextProvider = (props) => {
         }
     };
 
+    const getSavedPapers = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get(`${backendUrl}/api/upload/papers`, {
+                withCredentials: true
+            });
+            return response.data.papers; // Return the papers
+        } catch (error) {
+            handleError(error);
+            return []; // Return an empty array in case of an error
+        } finally {
+            setLoading(false); // Ensure loading is set to false only once
+        }
+    };
+    const deleteSavedPaper = async (paperId) => {
+        try {
+            const response = await axios.delete(`${backendUrl}/api/upload/papers/${paperId}`, {
+                withCredentials: true
+            });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    };
+
     const clearError = () => setError(null);
     const clearGeneratedPaper = () => setGeneratedPaper(null);
-
-
 
     const value = {
         backendUrl,
@@ -149,16 +166,20 @@ export const AppContextProvider = (props) => {
         uploadFile,
         generatePaper,
         savePaper,
+        getSavedPapers,
+        deleteSavedPaper,
 
         // Utility Actions
         clearError,
         clearGeneratedPaper
-    }
-
+    };
 
     return (
         <AppContext.Provider value={value}>
             {props.children}
         </AppContext.Provider>
-    )
-}
+    );
+};
+
+export default AppContextProvider;
+

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogIn, ShieldCheck, User, LogOut, ChevronDown } from 'lucide-react';
+import { LogIn, Zap  , User,Folders, LogOut, ChevronDown } from 'lucide-react';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -30,16 +30,16 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="w-full absolute top-0 z-50">
+        <nav className="w-full  absolute top-0 z-50">
             <div className="mx-auto px-4 md:px-14 lg:px-24">
                 <div className="flex justify-between items-center py-6">
                     {/* Logo */}
                     <div onClick={() => navigate('/')} className="cursor-pointer flex items-center gap-3">
                         <div className="bg-indigo-500/20 p-2 rounded-full animate-pulse">
-                            <ShieldCheck className="text-indigo-400 w-10 h-10" />
+                            <Zap   className="text-indigo-500 w-10 h-10" />
                         </div>
-                        <span className="text-white text-3xl font-semibold tracking-wider">
-                            AUTHFLOW
+                        <span className="text-indigo-500 text-3xl font-semibold tracking-wider">
+                            XamGen
                         </span>
                     </div>
 
@@ -49,7 +49,7 @@ const Navbar = () => {
                             <div className="relative">
                                 <button
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors"
+                                    className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition-colors"
                                 >
                                     <div className="flex items-center space-x-2">
                                         <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
@@ -80,6 +80,16 @@ const Navbar = () => {
                                             >
                                                 <User className="w-4 h-4" />
                                                 <span>Profile</span>
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    navigate('/savedpapers');
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                                className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
+                                            >
+                                                <Folders  className="w-4 h-4" />
+                                                <span>Saved Papers</span>
                                             </button>
                                             <button
                                                 onClick={() => {

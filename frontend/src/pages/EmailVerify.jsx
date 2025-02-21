@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ShieldCheck, Loader2, RefreshCw } from 'lucide-react';
+import { Zap, Loader2, RefreshCw } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { AppContext } from '../context/AppContext';
@@ -10,7 +10,7 @@ const EmailVerify = () => {
     const [otpSent, setOtpSent] = useState(false);
     const [loading, setLoading] = useState(false);
     const [resendLoading, setResendLoading] = useState(false);
-    
+
     const navigate = useNavigate();
     const location = useLocation();
     const { backendUrl, userData, getUserData, setIsLoggedin } = useContext(AppContext);
@@ -35,9 +35,9 @@ const EmailVerify = () => {
     const handleSendOtp = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.post(`${backendUrl}/api/auth/send-verify-otp`, { 
+            const { data } = await axios.post(`${backendUrl}/api/auth/send-verify-otp`, {
                 userId,
-                email 
+                email
             });
 
             if (data.success) {
@@ -56,9 +56,9 @@ const EmailVerify = () => {
     const handleResendOtp = async () => {
         setResendLoading(true);
         try {
-            const { data } = await axios.post(`${backendUrl}/api/auth/send-verify-otp`, { 
+            const { data } = await axios.post(`${backendUrl}/api/auth/send-verify-otp`, {
                 userId,
-                email 
+                email
             });
 
             if (data.success) {
@@ -78,9 +78,9 @@ const EmailVerify = () => {
         setLoading(true);
 
         try {
-            const { data } = await axios.post(`${backendUrl}/api/auth/verify-account`, { 
+            const { data } = await axios.post(`${backendUrl}/api/auth/verify-account`, {
                 userId,
-                otp 
+                otp
             });
 
             if (data.success) {
@@ -103,16 +103,16 @@ const EmailVerify = () => {
             {/* Logo */}
             <div onClick={() => navigate('/')} className="cursor-pointer absolute left-4 md:left-14 lg:left-24 top-6 flex items-center gap-3">
                 <div className="bg-indigo-500/20 p-2 rounded-full animate-pulse">
-                    <ShieldCheck className="text-indigo-400 w-10 h-10" />
+                    <Zap className="text-indigo-500 w-10 h-10" />
                 </div>
-                <span className="text-white text-3xl font-semibold tracking-wider">
-                    AUTHFLOW
+                <span className="text-indigo-500 text-3xl font-semibold tracking-wider">
+                    XamGen
                 </span>
             </div>
 
-            <div className="w-full max-w-md bg-gradient-to-br from-blue-950 to-emerald-900 rounded-2xl shadow-2xl overflow-hidden">
+            <div className="w-full max-w-md bg-gradient-to-br  rounded-2xl shadow-2xl overflow-hidden">
                 <div className="p-4 py-10">
-                    <h2 className="text-3xl font-bold text-white text-center mb-4">
+                    <h2 className="text-3xl font-bold text-indigo-500 text-center mb-4">
                         Verify Your Email
                     </h2>
                     <p className="text-zinc-400 text-center mb-8">
@@ -143,7 +143,7 @@ const EmailVerify = () => {
                                     placeholder="Enter OTP"
                                     value={otp}
                                     onChange={(e) => setOtp(e.target.value)}
-                                    className="w-full pl-4 pr-4 py-3 bg-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                                    className="w-full pl-4 pr-4 py-3  rounded-lg text-black placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                     required
                                 />
                             </div>
