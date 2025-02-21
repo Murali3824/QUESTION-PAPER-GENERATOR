@@ -195,6 +195,39 @@ export const getSavedPapers = async (req, res) => {
     }
 };
 
+export const deleteSavedPaper = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { paperId } = req.params;
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(401).json({ error: "User not found" });
+        }
+
+        // Find and remove the paper from savedPapers array
+        const paperIndex = user.savedPapers.findIndex(
+            paper => paper._id.toString() === paperId
+        );
+
+        if (paperIndex === -1) {
+            return res.status(404).json({ error: "Paper not found" });
+        }
+
+        // Remove the paper
+        user.savedPapers.splice(paperIndex, 1);
+        await user.save();
+
+        return res.json({
+            success: true,
+            message: "Paper deleted successfully"
+        });
+    } catch (error) {
+        console.error("Delete paper error:", error);
+        return res.status(500).json({ error: error.message });
+    }
+};
+
 export const getUploadedFiles = async (req, res) => {
     try {
         const userId = req.user._id;

@@ -73,15 +73,17 @@ const userSchema = new mongoose.Schema({
             btLevel: Number,
             unit: Number
         }],
-        generatedFrom: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'uploadedFiles'
-        }
+        // Changed to store the fileId from uploadedFiles array
+        generatedFrom: String // This will store the _id of the uploadedFiles subdocument
     }]
 }, {
     timestamps: true
 });
 
+// Add a method to find an uploaded file by its ID
+userSchema.methods.findUploadedFileById = function(fileId) {
+    return this.uploadedFiles.id(fileId);
+};
 
 const userModel = mongoose.models.user || mongoose.model('user', userSchema);
 export default userModel;
