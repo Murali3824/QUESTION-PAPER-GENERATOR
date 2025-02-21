@@ -161,7 +161,7 @@ export const login = async (req, res) => {
         res.cookie("token", token, getCookieConfig());
 
         const mailOption = {
-            from: `"AuthFlow" <${process.env.SENDER_EMAIL}>`,
+            from: `"XamGen" <${process.env.SENDER_EMAIL}>`,
             to: user.email,
             subject: "Your Account Login Was Successful",
             html: LOGIN_SUCCESS_TEMPLATE.replace(
@@ -232,7 +232,7 @@ export const sendVerifyOtp = async (req, res) => {
         await user.save();
 
         const mailOption = {
-            from: `"AuthFlow" <${process.env.SENDER_EMAIL}>`,
+            from: `"XamGen" <${process.env.SENDER_EMAIL}>`,
             to: user.email,
             subject: "Verify Your Account with the OTP Code",
             // text: `Your OTP is ${otp}. Verify your account using this OTP`,
@@ -287,9 +287,9 @@ export const verifyEmail = async (req, res) => {
         await user.save();
 
         const mailOption = {
-            from: `"AuthFlow" <${process.env.SENDER_EMAIL}>`,
+            from: `"XamGen" <${process.env.SENDER_EMAIL}>`,
             to: user.email,
-            subject: "Welcome to AuthFlow",
+            subject: "Welcome to XamGen",
             // text: `welcome`,
             html: WELCOME_TEMPLATE.replace("{{email}}", user.email).replace(
                 "{{dashboardLink}}",
@@ -349,7 +349,7 @@ export const sendResetOtp = async (req, res) => {
         await user.save();
 
         const mailOption = {
-            from: `"AuthFlow" <${process.env.SENDER_EMAIL}>`,
+            from: `"XamGen" <${process.env.SENDER_EMAIL}>`,
             to: user.email,
             subject: "Reset Your Password Using This OTP",
             // text: `Your OTP for resetting your password is ${otp}. Use this OTP to proceed with resetting your password.`

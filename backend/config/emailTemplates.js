@@ -95,7 +95,7 @@ export const VERIFY_TEMPLATE = `
                     <tbody>
                       <tr>
                         <td>
-                          <h1>Welcome to AUTHFLOW!</h1>
+                          <h1>Welcome to XamGen!</h1>
                           <p>You are just one step away from verifying your account. Please confirm your email address to get started.</p>
                           <p>Your email address: <span class="highlight">{{email}}</span></p>
                           <p>Please click the link below to verify your email:</p>
@@ -112,7 +112,7 @@ export const VERIFY_TEMPLATE = `
                   </table>
                   <div class="footer">
                     <p>Best regards,</p>
-                    <p>The AUTHFLOW Team</p>
+                    <p>The XamGen Team</p>
                     <p>If you need any assistance, contact us at teamSupport@gmail.com</p>
                   </div>
                 </td>
@@ -337,8 +337,8 @@ export const WELCOME_TEMPLATE = `
                     <tbody>
                       <tr>
                         <td>
-                          <h1>Welcome to AUTHFLOW!</h1>
-                          <p>Thank you for verifying your email address. Your account is now fully activated, and you're all set to explore the features of AUTHFLOW.</p>
+                          <h1>Welcome to XamGen!</h1>
+                          <p>Thank you for verifying your email address. Your account is now fully activated, and you're all set to explore the features of XamGen.</p>
                           <p>Here are a few things you can do next:</p>
                           <ul>
                             <li>Update your profile to make it uniquely yours.</li>
@@ -358,7 +358,7 @@ export const WELCOME_TEMPLATE = `
                   </table>
                   <div class="footer">
                     <p>Best regards,</p>
-                    <p>The AUTHFLOW Team</p>
+                    <p>The XamGen Team</p>
                     <p>If you need any assistance, contact us at teamSupport@gmail.com</p>
                   </div>
                 </td>
@@ -464,7 +464,7 @@ export const LOGIN_SUCCESS_TEMPLATE = `
                         <td>
                           <h1>Login Successful!</h1>
                           <p>Hi there,</p>
-                          <p>We're excited to inform you that your login to <strong>AuthFlow</strong> was successful. If this was you, feel free to continue exploring the platform.</p>
+                          <p>We're excited to inform you that your login to <strong>XamGen</strong> was successful. If this was you, feel free to continue exploring the platform.</p>
                           <p>For your security, here are the details of this login:</p>
                           <a href="{{dashboardLink}}" class="button">Go to Your Dashboard</a>
                         </td>
@@ -478,7 +478,7 @@ export const LOGIN_SUCCESS_TEMPLATE = `
                   </table>
                   <div class="footer">
                     <p>Best regards,</p>
-                    <p>The AuthFlow Team</p>
+                    <p>The XamGen Team</p>
                     <p>If you need any assistance, contact us at teamSupport@gmail.com</p>
                   </div>
                 </td>
