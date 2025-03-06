@@ -162,7 +162,7 @@ export const generatePaper = async (req, res) => {
         const user = await userModel.findById(userId);
 
         // Log the incoming request
-        console.log("Request body:", JSON.stringify(req.body, null, 2));
+        // console.log("Request body:", JSON.stringify(req.body, null, 2));
 
         if (!user) {
             return res.status(401).json({
@@ -192,8 +192,8 @@ export const generatePaper = async (req, res) => {
         }
 
         const file = user.uploadedFiles.id(fileId);
-        console.log("Found file:", file ? "yes" : "no");
-        console.log("Questions in file:", file?.questions?.length || 0);
+        // console.log("Found file:", file ? "yes" : "no");
+        // console.log("Questions in file:", file?.questions?.length || 0);
 
         if (!file) {
             return res.status(404).json({ error: "File not found" });
@@ -208,16 +208,16 @@ export const generatePaper = async (req, res) => {
         }
 
         // Log request parameters for debugging
-        console.log("Generation request:", {
-            fileId,
-            subject,
-            branch,
-            regulation,
-            year,
-            semester,
-            unit,
-            config,
-        });
+        // console.log("Generation request:", {
+        //     fileId,
+        //     subject,
+        //     branch,
+        //     regulation,
+        //     year,
+        //     semester,
+        //     unit,
+        //     config,
+        // });
 
         validateConfig(config, "short");
         validateConfig(config, "long");
@@ -232,33 +232,33 @@ export const generatePaper = async (req, res) => {
             uploadedBy: userId,
         };
         // Log the filter criteria
-        console.log("Search filters:", JSON.stringify(filters, null, 2));
+        // console.log("Search filters:", JSON.stringify(filters, null, 2));
 
         if (unit) {
             filters.unit = parseInt(unit);
         }
 
         // Log the filters being used
-        console.log("Searching with filters:", JSON.stringify(filters, null, 2));
+        // console.log("Searching with filters:", JSON.stringify(filters, null, 2));
 
         // First check if any questions exist with these filters
         const availableQuestions = await Question.find(filters).select(
             "_id shortQuestion longQuestion btLevel unit"
         );
 
-        console.log(
-            `Found ${availableQuestions.length} total questions matching filters`
-        );
+        // console.log(
+        //     `Found ${availableQuestions.length} total questions matching filters`
+        // );
 
         // Log breakdown of available questions
         const shortQuestions = availableQuestions.filter((q) => q.shortQuestion);
         const longQuestions = availableQuestions.filter((q) => q.longQuestion);
 
-        console.log("Available questions breakdown:", {
-            totalQuestions: availableQuestions.length,
-            shortQuestions: shortQuestions.length,
-            longQuestions: longQuestions.length,
-        });
+        // console.log("Available questions breakdown:", {
+        //     totalQuestions: availableQuestions.length,
+        //     shortQuestions: shortQuestions.length,
+        //     longQuestions: longQuestions.length,
+        // });
 
         if (availableQuestions.length === 0) {
             return res.status(404).json({
@@ -278,14 +278,14 @@ export const generatePaper = async (req, res) => {
         // Check if questions exist before attempting to generate
         // First check if any questions exist
         const questionCount = await Question.countDocuments(filters);
-        console.log("Matching questions count:", questionCount);
+        // console.log("Matching questions count:", questionCount);
 
         if (questionCount === 0) {
             // Log a sample question to see what data looks like
             const sampleQuestion = await Question.findOne({
                 _id: { $in: file.questions },
             });
-            console.log("Sample question from file:", sampleQuestion);
+            // console.log("Sample question from file:", sampleQuestion);
 
             return res.status(404).json({
                 error:

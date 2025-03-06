@@ -20,7 +20,7 @@ export const uploadQuestions = async (req, res) => {
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const data = xlsx.utils.sheet_to_json(sheet);
 
-        console.log('Raw Excel data first row:', data[0]);
+        // console.log('Raw Excel data first row:', data[0]);
 
         if (data.length === 0) {
             return res.status(400).json({ error: "Excel file is empty" });
@@ -78,13 +78,13 @@ export const uploadQuestions = async (req, res) => {
             }
 
             // Log processed question
-            console.log(`Processed question ${index + 1}:`, {
-                subjectCode: question.subjectCode,
-                branch: question.branch,
-                regulation: question.regulation,
-                year: question.year,
-                semester: question.semester
-            });
+            // console.log(`Processed question ${index + 1}:`, {
+            //     subjectCode: question.subjectCode,
+            //     branch: question.branch,
+            //     regulation: question.regulation,
+            //     year: question.year,
+            //     semester: question.semester
+            // });
 
             return question;
         });
@@ -100,7 +100,7 @@ export const uploadQuestions = async (req, res) => {
 
         // Save questions and get their IDs
         const insertedQuestions = await Question.insertMany(questions);
-        console.log(`Successfully inserted ${insertedQuestions.length} questions`);
+        // console.log(`Successfully inserted ${insertedQuestions.length} questions`);
 
         // Create new file entry
         const newFile = {
