@@ -1,12 +1,11 @@
 import FileUpload from "../components/FileUpload";
+import Navbar from "../components/Navbar";
 
 const Upload = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          Upload Questions Bank
-        </h1>
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-950 py-12">
+      <div className=" mx-auto">
+        <Navbar />
         <FileUpload />
       </div>
     </div>

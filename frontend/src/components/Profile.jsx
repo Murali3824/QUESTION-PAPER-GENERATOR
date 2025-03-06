@@ -79,7 +79,7 @@ const Profile = () => {
 
     return (
         // <div className='grid gap-2 md:grid-cols-2'>
-        <div className="min-h-screen ">
+        <div className="min-h-screen bg-white mx-auto ">
             <Navbar />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24 lg:pt-32">
                 {updateSuccess && (
@@ -146,7 +146,7 @@ const Profile = () => {
                     </div>
 
                     {/* Profile Details */}
-                    <div className="px-6 py-8 sm:px-8">
+                    <div className=" bg-white px-6 py-8 sm:px-8">
                         <div className="grid gap-6 md:grid-cols-2">
                             {/* Email */}
                             <div className="flex items-center gap-4 p-4 bg-white/5 rounded-xl">

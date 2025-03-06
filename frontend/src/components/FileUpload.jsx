@@ -1,42 +1,55 @@
 import { useContext, useState, useRef } from "react";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
+import { Upload, FileCheck, Trash2, FileX, AlertCircle, CheckCircle, Upload as UploadIcon, Loader } from "lucide-react";
 
 const FileUpload = () => {
   const { uploadFile, isLoggedin, userData } = useContext(AppContext);
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
 
-  // File size limit (5MB)
-  // const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    
-    // Reset message when new file is selected
+  const handleFileChange = (selectedFile) => {
     setMessage("");
     
-    if (!selectedFile) {
-      return;
-    }
+    if (!selectedFile) return;
     
-    // Check file type
     if (!selectedFile.name.match(/\.(xlsx|xls)$/)) {
-      setMessage("❌ Please select an Excel file (.xlsx or .xls)");
+      setMessage("Please select an Excel file (.xlsx or .xls)");
       setFile(null);
       return;
     }
     
-    // Check file size
-    // if (selectedFile.size > MAX_FILE_SIZE) {
-    //   setMessage(`❌ File size exceeds the limit of ${MAX_FILE_SIZE / (1024 * 1024)}MB`);
-    //   setFile(null);
-    //   return;
-    // }
-    
     setFile(selectedFile);
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileChange(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFileChange(e.target.files[0]);
+    }
   };
 
   const handleUpload = async () => {
@@ -51,7 +64,7 @@ const FileUpload = () => {
     }
     
     if (!file) {
-      setMessage("❌ Please select a file");
+      setMessage("Please select a file");
       return;
     }
     
@@ -63,10 +76,9 @@ const FileUpload = () => {
       
       if (response.success) {
         const processedCount = response.questionsCount || 0;
-        setMessage(`✅ File uploaded successfully! ${processedCount} questions processed.`);
+        setMessage(`File uploaded successfully! ${processedCount} questions processed.`);
         toast.success("File uploaded successfully!");
         
-        // Reset file input
         setFile(null);
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
@@ -77,14 +89,14 @@ const FileUpload = () => {
     } catch (error) {
       console.error("Upload error:", error);
       
-      const errorMessage = error.response?.data?.error || error.message || "❌ File upload failed";
+      const errorMessage = error.response?.data?.error || error.message || "File upload failed";
       const missingHeaders = error.response?.data?.missingHeaders;
       
       if (missingHeaders && missingHeaders.length) {
         setMessage(`${errorMessage}: ${missingHeaders.join(', ')}`);
         toast.error("Excel file is missing required headers");
       } else {
-        setMessage(`❌ ${errorMessage}`);
+        setMessage(`${errorMessage}`);
         toast.error(errorMessage);
       }
     } finally {
@@ -92,94 +104,137 @@ const FileUpload = () => {
     }
   };
 
-  const renderFilePreview = () => {
-    if (!file) return null;
-    
-    return (
-      <div className="flex items-center mt-2 p-2 bg-gray-50 rounded">
-        <svg className="w-6 h-6 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        <span className="text-sm text-gray-600 truncate max-w-xs">{file.name}</span>
-        <span className="text-xs text-gray-500 ml-2">
-          ({(file.size / 1024).toFixed(1)} KB)
-        </span>
-        <button
-          onClick={() => {
-            setFile(null);
-            if (fileInputRef.current) {
-              fileInputRef.current.value = "";
-            }
-            setMessage("");
-          }}
-          className="ml-auto text-red-500 hover:text-red-700"
-          title="Remove file"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    );
-  };
+  const requiredHeaders = [
+    "Subject Code", "Subject", "Branch", "Regulation", 
+    "Year", "Sem", "Month", "Unit", "B.T Level"
+  ];
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Upload Question Bank</h2>
-      
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Excel File (.xlsx, .xls)
-        </label>
-        <input
-          type="file"
-          onChange={handleFileChange}
-          accept=".xlsx,.xls"
-          className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-          ref={fileInputRef}
-          disabled={isLoading}
-        />
-        {renderFilePreview()}
-      </div>
-      
-      <div className="text-xs text-gray-500 mb-4">
-        <p>* File must be Excel format (.xlsx or .xls)</p>
-        {/* <p>* Maximum file size: 5MB</p> */}
-        <p>* Required columns: Subject Code, Subject, Branch, Regulation, Year, Sem, Month, Unit, B.T Level</p>
-      </div>
-      
-      <button
-        onClick={handleUpload}
-        disabled={isLoading || !file}
-        className={`w-full py-2 px-4 rounded-md text-white font-medium transition-colors ${
-          isLoading || !file
-            ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700'
-        }`}
-      >
-        {isLoading ? (
-          <div className="flex items-center justify-center">
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Uploading...
-          </div>
-        ) : 'Upload File'}
-      </button>
-      
-      {message && (
-        <div className={`mt-4 p-3 rounded text-sm ${
-          message.includes('✅') 
-            ? 'bg-green-50 text-green-800' 
-            : message.includes('❌')
-              ? 'bg-red-50 text-red-800'
-              : 'bg-blue-50 text-blue-800'
-        }`}>
-          {message}
+    <div className="max-w-xl mt-20 mx-auto">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100">
+        <div className="bg-gradient-to-br from-indigo-600 to-purple-600 px-6 py-6 text-white">
+          <h2 className="text-2xl font-bold">Question Bank Upload</h2>
+          <p className="mt-1 text-sm opacity-90">Upload your formatted Excel file containing questions</p>
         </div>
-      )}
+        
+        <div className="p-6">
+          <div 
+            className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-all ${
+              dragActive 
+                ? "border-indigo-500 bg-indigo-50" 
+                : file 
+                  ? "border-emerald-400 bg-emerald-50" 
+                  : "border-gray-200 hover:border-gray-300"
+            }`}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          >
+            {file ? (
+              <div className="flex flex-col items-center">
+                <div className="mb-3">
+                  <FileCheck size={40} className="text-emerald-500" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900">{file.name}</h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  {(file.size / 1024).toFixed(1)} KB • Excel file
+                </p>
+                <button 
+                  onClick={() => {
+                    setFile(null);
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = "";
+                    }
+                    setMessage("");
+                  }}
+                  className="mt-4 flex items-center text-sm font-medium text-red-600 hover:text-red-800"
+                >
+                  <Trash2 size={16} className="mr-1" />
+                  Remove file
+                </button>
+              </div>
+            ) : (
+              <>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".xlsx,.xls"
+                  onChange={handleInputChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  disabled={isLoading}
+                />
+                <div className="flex flex-col items-center">
+                  <div className="mb-3">
+                    <Upload size={40} className="text-indigo-500" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900">Drag & Drop your Excel file</h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    or <span className="text-indigo-600 font-medium">browse files</span>
+                  </p>
+                  <p className="text-xs text-gray-400 mt-2">
+                    Supports .xlsx and .xls formats
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+          
+          <div className="mt-5 bg-gray-50 rounded-lg p-4 border border-gray-100">
+            <h4 className="text-sm font-medium text-gray-700 mb-2">Required Excel Headers:</h4>
+            <div className="flex flex-wrap gap-2">
+              {requiredHeaders.map((header) => (
+                <span key={header} className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded-md">
+                  {header}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          {message && (
+            <div className={`mt-5 p-4 rounded-lg text-sm flex items-start ${
+              message.includes('successfully') 
+                ? 'bg-emerald-50 text-emerald-800 border border-emerald-100' 
+                : message.includes('failed')
+                  ? 'bg-red-50 text-red-800 border border-red-100'
+                  : 'bg-blue-50 text-blue-800 border border-blue-100'
+            }`}>
+              <span className="flex-shrink-0 mr-2">
+                {message.includes('successfully') ? (
+                  <CheckCircle size={18} />
+                ) : message.includes('failed') ? (
+                  <FileX size={18} />
+                ) : (
+                  <AlertCircle size={18} />
+                )}
+              </span>
+              <span>{message}</span>
+            </div>
+          )}
+          
+          <button
+            onClick={handleUpload}
+            disabled={isLoading || !file}
+            className={`mt-5 w-full flex items-center justify-center py-3 px-4 rounded-md text-white font-medium transition-all ${
+              isLoading || !file
+                ? 'bg-gray-300 cursor-not-allowed'
+                : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow hover:shadow-md'
+            }`}
+          >
+            {isLoading ? (
+              <>
+                <Loader size={18} className="animate-spin mr-2" />
+                Processing Upload...
+              </>
+            ) : (
+              <>
+                <UploadIcon size={18} className="mr-2" />
+                Upload Question Bank
+              </>
+            )}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

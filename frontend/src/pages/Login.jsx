@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Zap, User, Mail, Lock, Check, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Sparkles, User, Mail, Lock, Check, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
     const [state, setState] = useState('Login');
@@ -21,12 +21,12 @@ const Login = () => {
         setShowPassword(!showPassword);
     };
 
-    const [isLoading, setIsLoading] = useState(false);  // Loading state
+    const [isLoading, setIsLoading] = useState(false);
 
     const onsubmitHandler = async (e) => {
         e.preventDefault();
 
-        setIsLoading(true);  // Set loading state to true
+        setIsLoading(true);
 
         try {
             axios.defaults.withCredentials = true;
@@ -34,8 +34,7 @@ const Login = () => {
             if (state === 'Sign Up') {
                 const { data } = await axios.post(backendUrl + '/api/auth/register', { name, email, password });
                 setIsLoading(false);
-                console.log(data.message);
-                // Reset loading state
+                
                 if (data.message.includes("Registration successful, please verify your email.")) {
                     toast.success("Registration successful, please verify your email.");
                     navigate('/email-verify');
@@ -49,18 +48,17 @@ const Login = () => {
                 }
             } else {
                 const { data } = await axios.post(backendUrl + '/api/auth/login', { email, password });
-                setIsLoading(false);  // Reset loading state
-                // console.log(data);
+                setIsLoading(false);
+                
                 if (data.message.includes("Login successful")) {
                     toast.success("Login successful");
                     setIsLoggedin(true);
                     getUserData();
                     setTimeout(() => {
-                        setIsLoading(true)
+                        setIsLoading(true);
                         navigate('/');
                     }, 500);
                 } else {
-                    // Check for the specific message indicating email verification
                     if (data.message.includes("Email verification required")) {
                         toast.info("Please verify your email first.");
                         navigate('/email-verify');
@@ -83,78 +81,92 @@ const Login = () => {
     }, [userData, navigate]);
 
     return (
-        <div className="min-h-screen  flex items-center justify-center p-4">
-            <div onClick={() => navigate('/')} className="cursor-pointer absolute left-4 md:left-14 lg:left-24 top-6 flex items-center gap-3">
-                <div className="bg-indigo-500/20 p-2 rounded-full animate-pulse">
-                    <Zap className="text-indigo-500 w-10 h-10" />
+        <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 pt-20">
+            {/* Logo */}
+            <div 
+                onClick={() => navigate('/')} 
+                className="cursor-pointer absolute left-4 md:left-8 top-6 flex items-center gap-2 group"
+            >
+                <div className="bg-gradient-to-br from-violet-600 to-indigo-600 p-1 sm:p-2 rounded-lg group-hover:shadow-lg group-hover:shadow-violet-500/20 transition-all duration-300">
+                    <Sparkles className="text-white w-5 h-5" />
                 </div>
-                <span className="text-indigo-500 text-3xl font-semibold tracking-wider">
+                <span className="bg-gradient-to-r from-violet-500 to-indigo-500 bg-clip-text text-transparent text-2xl sm:text-3xl font-bold tracking-tight">
                     XamGen
                 </span>
             </div>
 
-            <div className="w-full max-w-md mt-10  rounded-3xl shadow-2xl overflow-hidden ">
-                <div className="p-4 my-4">
-                    <h2 className="text-4xl font-bold text-indigo-500 text-center mb-4 flex items-center justify-center gap-3">
+            <div className="w-full max-w-md mt-10 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-xl border border-slate-700 overflow-hidden">
+                <div className="p-8">
+                    <h2 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
                         {state === 'Sign Up' ? (
                             <>
-                                <UserPlus className="w-10 h-10 text-indigo-400" />
+                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center">
+                                    <UserPlus className="w-5 h-5 text-white" />
+                                </div>
                                 Create Account
                             </>
                         ) : (
                             <>
-                                <LogIn className="w-10 h-10 text-indigo-400" />
+                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center">
+                                    <LogIn className="w-5 h-5 text-white" />
+                                </div>
                                 Welcome Back
                             </>
                         )}
                     </h2>
-                    <p className="text-slate-400 text-center mb-8">
+                    <p className="text-slate-400 mb-8">
                         {state === 'Sign Up'
                             ? 'Join our platform and start your journey!'
                             : 'Sign in to continue your session'}
                     </p>
 
-                    <form onSubmit={onsubmitHandler} className="space-y-6">
+                    <form onSubmit={onsubmitHandler} className="space-y-4">
                         {state === 'Sign Up' && (
                             <div className="relative group">
-                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-400 transition-colors" />
+                                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-violet-500 transition-all">
+                                    <User className="w-5 h-5" />
+                                </div>
                                 <input
                                     onChange={e => setName(e.target.value)}
                                     value={name}
                                     type="text"
                                     placeholder="Full Name"
-                                    className="w-full pl-10 pr-4 py-3 rounded-xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-slate-700/50 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
                                     required
                                 />
                             </div>
                         )}
 
                         <div className="relative group">
-                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-400 transition-colors" />
+                            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-violet-500 transition-all">
+                                <Mail className="w-5 h-5" />
+                            </div>
                             <input
                                 onChange={e => setEmail(e.target.value)}
                                 value={email}
                                 type="email"
                                 placeholder="Email Address"
-                                className="w-full pl-10 pr-4 py-3 rounded-xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                                className="w-full pl-10 pr-4 py-3 rounded-lg bg-slate-700/50 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
                                 required
                             />
                         </div>
 
                         <div className="relative group">
-                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-400 transition-colors" />
+                            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-violet-500 transition-all">
+                                <Lock className="w-5 h-5" />
+                            </div>
                             <input
                                 onChange={e => setPassword(e.target.value)}
                                 value={password}
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Password"
-                                className="w-full pl-10 pr-4 py-3 rounded-xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                                className="w-full pl-10 pr-12 py-3 rounded-lg bg-slate-700/50 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
                                 required
                             />
                             <button
                                 type="button"
                                 onClick={togglePasswordVisibility}
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-indigo-400 transition-colors"
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-violet-500 transition-colors"
                             >
                                 {showPassword ?
                                     <EyeOff className="w-5 h-5" /> :
@@ -169,15 +181,15 @@ const Login = () => {
                                     className="flex items-center text-slate-400 text-sm cursor-pointer"
                                     onClick={() => setRememberMe(!rememberMe)}
                                 >
-                                    <div className={`mr-2 w-5 h-5 border rounded flex items-center justify-center transition-colors
-                                        ${rememberMe ? 'bg-indigo-500 border-indigo-500' : 'border-slate-600'}`}>
+                                    <div className={`mr-2 w-5 h-5 rounded flex items-center justify-center transition-colors
+                                        ${rememberMe ? 'bg-gradient-to-br from-violet-600 to-indigo-600 border-violet-500' : 'bg-slate-700 border border-slate-600'}`}>
                                         {rememberMe && <Check className="w-4 h-4 text-white" />}
                                     </div>
                                     Remember me
                                 </label>
                                 <span
                                     onClick={() => navigate('/reset-password')}
-                                    className="text-sm text-indigo-400 hover:underline cursor-pointer transition-colors"
+                                    className="text-sm text-violet-400 hover:text-violet-300 cursor-pointer transition-colors"
                                 >
                                     Forgot password?
                                 </span>
@@ -186,10 +198,10 @@ const Login = () => {
 
                         <button
                             type="submit"
-                            className="w-full py-3 bg-indigo-500 text-white rounded-xl font-semibold hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 "
+                            className="w-full py-3 mt-2 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-medium shadow-md shadow-indigo-500/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-slate-800"
                         >
                             {isLoading ? (
-                                <div className="w-6 h-6 border-4 border-indigo-300 border-t-transparent rounded-full animate-spin mx-auto"></div>  // Spinner animation
+                                <div className="w-6 h-6 border-3 border-t-transparent border-white rounded-full animate-spin mx-auto"></div>
                             ) : (
                                 state
                             )}
@@ -197,22 +209,27 @@ const Login = () => {
                     </form>
 
                     <div className="text-center mt-6">
+                        <div className="relative flex items-center justify-center">
+                            <div className="border-t border-slate-700 w-full absolute"></div>
+                            <span className="bg-slate-800 px-4 text-xs text-slate-500 relative">OR</span>
+                        </div>
+
                         {state === 'Sign Up' ? (
-                            <p className="text-slate-400 text-sm">
+                            <p className="text-slate-400 text-sm mt-4">
                                 Already have an account?{' '}
                                 <button
                                     onClick={() => setState('Login')}
-                                    className="text-indigo-400 hover:underline font-semibold"
+                                    className="text-violet-400 hover:text-violet-300 font-medium"
                                 >
                                     Login
                                 </button>
                             </p>
                         ) : (
-                            <p className="text-slate-400 text-sm">
+                            <p className="text-slate-400 text-sm mt-4">
                                 Don't have an account?{' '}
                                 <button
                                     onClick={() => setState('Sign Up')}
-                                    className="text-indigo-400 hover:underline font-semibold"
+                                    className="text-violet-400 hover:text-violet-300 font-medium"
                                 >
                                     Sign Up
                                 </button>

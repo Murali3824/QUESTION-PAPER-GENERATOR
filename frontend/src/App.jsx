@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Profile from './components/Profile';
 import SavedPapers from './components/SavedPapers';
+import UploadedFiles from './components/UploadedFiles';
 
 const App = () => {
   return (
@@ -25,18 +26,22 @@ const App = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="colored"
+        theme="dark"
         style={{
           zIndex: 9999,
         }}
         toastStyle={{
-          backgroundColor: '#333', // Dark background
-          color: '#fff', // White text
-          borderRadius: '8px', // Rounded corners
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)', // Subtle shadow
+          backgroundColor: '#1e293b', // Slate-800 background
+          color: '#f1f5f9', // Slate-100 text
+          borderRadius: '0.75rem', // Larger rounded corners
+          boxShadow: '0 8px 16px rgba(0,0,0,0.2)', // More prominent shadow
+          border: '1px solid #334155', // Slate-700 border
+          fontSize: '0.95rem',
+          padding: '12px 16px',
         }}
         progressStyle={{
-          background: 'linear-gradient(to right, #4cd964, #5ac8fa)', // Gradient progress bar
+          background: 'linear-gradient(to right, #8b5cf6, #6366f1)', // Violet to indigo gradient
+          height: '4px',
         }}
       />
       <Routes>
@@ -46,7 +51,7 @@ const App = () => {
         <Route path='/profile' element={<Profile />} />
         <Route path='/savedpapers' element={<SavedPapers />} />
         <Route path='/reset-password' element={<ResetPassword />} />
-        
+        <Route path='/uploadedfiles' element={<UploadedFiles />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/generate" element={<Generate />} />
       </Routes>

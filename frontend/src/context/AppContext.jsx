@@ -14,7 +14,7 @@ export const AppContextProvider = (props) => {
     const [userData, setUserData] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [subjects, setSubjects] = useState([]);
+    // const [subjects, setSubjects] = useState([]);
     const [generatedPaper, setGeneratedPaper] = useState(null);
 
     const handleError = (error) => {
@@ -136,6 +136,7 @@ export const AppContextProvider = (props) => {
             setLoading(false); // Ensure loading is set to false only once
         }
     };
+
     const deleteSavedPaper = async (paperId) => {
         try {
             const response = await axios.delete(`${backendUrl}/api/upload/papers/${paperId}`, {
@@ -159,7 +160,7 @@ export const AppContextProvider = (props) => {
         // State
         loading,
         error,
-        subjects,
+        // subjects,
         generatedPaper,
 
         // API Actions

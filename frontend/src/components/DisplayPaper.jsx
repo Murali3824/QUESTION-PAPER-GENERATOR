@@ -56,8 +56,8 @@ const DisplayPaper = ({ questions }) => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 px-4">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen max-w-4xl mx-auto mt-4 rounded-lg bg-gradient-to-b from-gray-50 to-gray-100 py-8 px-4">
+      <div className="max-w-4xl mx-auto space-y-8">
         {/* Configuration Panel */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border-b border-gray-100">
