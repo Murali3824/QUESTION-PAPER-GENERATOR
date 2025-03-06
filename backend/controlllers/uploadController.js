@@ -247,3 +247,52 @@ export const getUploadedFiles = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 };
+
+export const deleteFile = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { fileId } = req.params;
+        
+        // Find the user
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        
+        // Find the file in user's uploaded files
+        const fileIndex = user.uploadedFiles.findIndex(
+            file => file._id.toString() === fileId
+        );
+        
+        if (fileIndex === -1) {
+            return res.status(404).json({ error: "File not found" });
+        }
+        
+        // Get the file details to delete associated questions
+        const fileInfo = user.uploadedFiles[fileIndex];
+        
+        // Delete associated questions
+        await Question.deleteMany({
+            _id: { $in: fileInfo.questions }
+        });
+        
+        // Remove the file from user's uploadedFiles array
+        user.uploadedFiles.splice(fileIndex, 1);
+        
+        // Remove the questions from user's uploadedQuestions array
+        user.uploadedQuestions = user.uploadedQuestions.filter(
+            qId => !fileInfo.questions.includes(qId)
+        );
+        
+        // Save the user
+        await user.save();
+        
+        return res.json({
+            success: true,
+            message: "File and associated questions deleted successfully"
+        });
+    } catch (error) {
+        console.error("Delete file error:", error);
+        return res.status(500).json({ error: error.message });
+    }
+};
