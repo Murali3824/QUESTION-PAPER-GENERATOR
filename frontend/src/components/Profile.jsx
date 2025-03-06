@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { User, Mail, Shield, Calendar, Check, X, Pencil } from 'lucide-react';
+import { Loader2, User, Mail, Shield, Calendar, Check, X, Pencil } from 'lucide-react';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
 import Navbar from './Navbar';
@@ -57,8 +57,12 @@ const Profile = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-                <div className="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+            <div className="min-h-screen bg-gray-50">
+                <Navbar />
+                <div className="flex flex-col items-center justify-center h-64">
+                    <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                    <span className="mt-2 text-gray-600">Loading profile...</span>
+                </div>
             </div>
         );
     }
