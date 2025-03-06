@@ -258,7 +258,7 @@ const GeneratePaper = ({ setQuestions }) => {
         config
       };
       
-      console.log('Request data:', JSON.stringify(requestData, null, 2));
+      // console.log('Request data:', JSON.stringify(requestData, null, 2));
       
       const response = await generatePaper(requestData);
 

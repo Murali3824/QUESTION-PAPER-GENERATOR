@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { Upload, FileText, ExternalLink } from 'lucide-react';
 
 const Home = () => {
+
+    const currentYear = new Date().getFullYear();
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-950">
             <Navbar />
@@ -14,7 +17,7 @@ const Home = () => {
                     <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-blue-600/10 rounded-full blur-3xl"></div>
                     <div className="absolute bottom-40 right-20 w-60 h-60 bg-teal-600/10 rounded-full blur-3xl"></div>
                 </div>
-                
+
                 {/* Main content container */}
                 <div className="relative max-w-7xl mx-auto pt-20">
                     <div className="text-center space-y-6 mb-12">
@@ -25,13 +28,13 @@ const Home = () => {
                             <br />
                             <span className="text-white">Generator</span>
                         </h1>
-                        
+
                         <p className="text-lg text-slate-400 max-w-2xl mx-auto">
                             Create professional exam papers in minutes. Upload your question bank
                             and let our system generate a well-structured paper for you.
                         </p>
                     </div>
-                    
+
                     {/* Feature cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                         <Link to="/upload" className="group">
@@ -54,7 +57,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </Link>
-                        
+
                         <Link to="/generate" className="group">
                             <div className="relative">
                                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-teal-600/20 rounded-xl blur-md group-hover:blur-lg transition-all duration-300"></div>
@@ -76,9 +79,14 @@ const Home = () => {
                             </div>
                         </Link>
                     </div>
-                    
+
                 </div>
             </main>
+            <div className="border-t border-slate-700 mt-8 py-6 flex flex-col md:flex-row justify-center items-center">
+                <p className="text-slate-400 text-sm">
+                    © {currentYear} ResearchAI. All rights reserved.
+                </p>
+            </div>
         </div>
     );
 };

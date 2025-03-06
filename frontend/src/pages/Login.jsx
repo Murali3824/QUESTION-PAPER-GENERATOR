@@ -33,37 +33,39 @@ const Login = () => {
 
             if (state === 'Sign Up') {
                 const { data } = await axios.post(backendUrl + '/api/auth/register', { name, email, password });
-                setIsLoading(false);
                 
                 if (data.message.includes("Registration successful, please verify your email.")) {
                     toast.success("Registration successful, please verify your email.");
+                    setIsLoading(false);
                     navigate('/email-verify');
                 } else {
                     if (data.message.includes("User exists but not verified")) {
                         toast.success("User exists but not verified");
+                        setIsLoading(false);
                         navigate('/email-verify');
                     } else {
                         toast.error(data.message);
+                        setIsLoading(false);
                     }
                 }
             } else {
                 const { data } = await axios.post(backendUrl + '/api/auth/login', { email, password });
-                setIsLoading(false);
                 
                 if (data.message.includes("Login successful")) {
                     toast.success("Login successful");
                     setIsLoggedin(true);
                     getUserData();
                     setTimeout(() => {
-                        setIsLoading(true);
                         navigate('/');
                     }, 500);
                 } else {
                     if (data.message.includes("Email verification required")) {
                         toast.info("Please verify your email first.");
+                        setIsLoading(false);
                         navigate('/email-verify');
                     } else {
                         toast.error(data.message || "Something went wrong");
+                        setIsLoading(false);
                     }
                 }
             }
@@ -81,7 +83,7 @@ const Login = () => {
     }, [userData, navigate]);
 
     return (
-        <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 pt-20">
+        <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
             {/* Logo */}
             <div 
                 onClick={() => navigate('/')} 
@@ -95,8 +97,8 @@ const Login = () => {
                 </span>
             </div>
 
-            <div className="w-full max-w-md mt-10 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-xl border border-slate-700 overflow-hidden">
-                <div className="p-8">
+            <div className="w-full max-w-md bg-slate-800/50 backdrop-blur-md rounded-xl shadow-xl border border-slate-700 overflow-hidden">
+                <div className="p-6 sm:p-8">
                     <h2 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
                         {state === 'Sign Up' ? (
                             <>
@@ -198,10 +200,11 @@ const Login = () => {
 
                         <button
                             type="submit"
+                            disabled={isLoading}
                             className="w-full py-3 mt-2 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-medium shadow-md shadow-indigo-500/20 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-slate-800"
                         >
                             {isLoading ? (
-                                <div className="w-6 h-6 border-3 border-t-transparent border-white rounded-full animate-spin mx-auto"></div>
+                                <div className="w-6 h-6 border-2 border-t-transparent border-white rounded-full animate-spin mx-auto"></div>
                             ) : (
                                 state
                             )}

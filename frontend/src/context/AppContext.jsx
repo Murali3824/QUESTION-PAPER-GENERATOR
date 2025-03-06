@@ -28,7 +28,7 @@ export const AppContextProvider = (props) => {
             const { data } = await axios.get(`${backendUrl}/api/user/data`, {
                 withCredentials: true, // Ensure cookies are sent with the request
             });
-            console.log(data);
+            // console.log(data);
 
             if (data.success) {
                 // Successfully fetched user data
@@ -81,7 +81,7 @@ export const AppContextProvider = (props) => {
             });
 
             // Log the full response for debugging
-            console.log("Full upload response:", response);
+            // console.log("Full upload response:", response);
 
             setLoading(false);
             return response.data || {};
@@ -98,7 +98,7 @@ export const AppContextProvider = (props) => {
             setError(null);
 
             const response = await axios.post(`${backendUrl}/api/generate/generate-paper`, config, { withCredentials: true });
-            console.log("Generate Paper Response Data:", response.data);
+            // console.log("Generate Paper Response Data:", response.data);
 
             setGeneratedPaper(response.data);
             setLoading(false);
